@@ -42,7 +42,7 @@ const CustomerSidebar: React.FC<CustomerSidebarProps> = ({ onClose }) => {
             items: [
                 { name: 'Orders', href: '/customer/orders', icon: ShoppingBag },
                 { name: 'Inbox', href: '/customer/inbox', icon: Mail },
-                { name: 'Saved Items', href: '/customer/wishlist', icon: Heart },
+                { name: 'Wishlist', href: '/customer/wishlist', icon: Heart },
             ]
         },
         {

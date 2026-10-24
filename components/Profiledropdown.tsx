@@ -63,7 +63,7 @@ export default function DropdownProfile() {
   return (
     <DropdownMenu modal={false} onOpenChange={setIsOpen}>
       <DropdownMenuTrigger asChild>
-        <button className="flex items-center gap-1.5 focus:outline-none cursor-pointer group">
+        <button className="flex items-center gap-1.5 focus:outline-none cursor-pointer group p-2">
           <div className="w-8 h-8 md:w-9 md:h-9 bg-[#e52e2e] hover:bg-red-700 text-white rounded-full flex items-center justify-center font-bold text-[12px] md:text-[14px] transition shadow-sm select-none">
             {initials}
           </div>

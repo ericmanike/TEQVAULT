@@ -14,7 +14,7 @@ const Marquee = () => {
 
   return (
     <>
-      <div className="flex flex-row flex-nowrap px-3 sm:px-6 md:px-8 gap-3 sm:gap-5 justify-between items-center bg-gray-800 text-white py-2 sm:py-2.5 overflow-hidden border-b border-yellow-400">
+      <div className="flex flex-row flex-nowrap px-3 sm:px-6 md:px-8 gap-3 sm:gap-5 justify-between items-center bg-gray-800 text-white py-2 sm:py-2.5 overflow-hidden border-b border-yellow-400 py-6">
         <div className="flex flex-nowrap items-center gap-2">
           <Cable className="w-5 h-5 sm:w-6 sm:h-6 text-yellow-400 shrink-0" />  
           <TextType 
@@ -29,7 +29,7 @@ const Marquee = () => {
             showCursor
             cursorCharacter="|"
             deletingSpeed={50}
-            className="text-xs sm:text-sm md:text-base font-semibold"
+            className="text-[13px] sm:text-[14px] md:text-[18px] font-semibold"
             cursorBlinkDuration={0.5}
           />
         </div>

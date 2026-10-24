@@ -91,7 +91,7 @@ export default function DropdownProfile() {
           onClick={() => router.push('/customer/wishlist')}
         >
           <Heart className="size-4 text-gray-500" strokeWidth={1.5} />
-          <span className="font-semibold text-[14px]">Saved Items</span>
+          <span className="font-semibold text-[14px]">Whishlist</span>
         </DropdownMenuItem>
 
         <DropdownMenuItem 

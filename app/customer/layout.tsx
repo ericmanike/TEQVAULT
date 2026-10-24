@@ -72,20 +72,9 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                                     animate={{ x: 0 }}
                                     exit={{ x: '-100%' }}
                                     transition={{ type: 'spring', damping: 25, stiffness: 220 }}
-                                    className="relative flex flex-col w-[330px] max-w-[90%] h-full bg-white shadow-2xl z-10 overflow-hidden"
+                                    className="relative flex flex-col w-[280px] max-w-[85%] h-full bg-[#fcfcfc] shadow-2xl z-10 overflow-hidden"
                                 >
-                                    <div className="flex justify-between items-center px-5 py-4 border-b border-gray-150 bg-gray-50 flex-shrink-0">
-                                        <span className="font-extrabold text-slate-900 text-base">Dashboard Menu</span>
-                                        <button 
-                                            onClick={() => setIsMobileSidebarOpen(false)}
-                                            className="p-1.5 rounded-xl text-slate-500 hover:bg-gray-200 transition-colors cursor-pointer"
-                                        >
-                                            <X size={22} />
-                                        </button>
-                                    </div>
-                                    <div className="flex-1 overflow-hidden" onClick={() => setIsMobileSidebarOpen(false)}>
-                                        <CustomerSidebar />
-                                    </div>
+                                    <CustomerSidebar onClose={() => setIsMobileSidebarOpen(false)} />
                                 </motion.div>
                             </div>
                         )}

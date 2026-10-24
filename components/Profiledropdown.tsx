@@ -64,7 +64,7 @@ export default function DropdownProfile() {
     <DropdownMenu modal={false} onOpenChange={setIsOpen}>
       <DropdownMenuTrigger asChild>
         <button className="flex items-center gap-1.5 focus:outline-none cursor-pointer group">
-          <div className="w-8 h-8 md:w-9 md:h-9 bg-[#e52e2e] hover:bg-red-700 text-white rounded-full flex items-center justify-center font-bold text-xs md:text-sm transition shadow-sm select-none">
+          <div className="w-8 h-8 md:w-9 md:h-9 bg-[#e52e2e] hover:bg-red-700 text-white rounded-full flex items-center justify-center font-bold text-[14px] md:text-[14px] transition shadow-sm select-none">
             {initials}
           </div>
           {isOpen ? (
@@ -83,7 +83,7 @@ export default function DropdownProfile() {
           onClick={() => router.push('/customer/orders')}
         >
           <ShoppingBag className="size-4 text-gray-500" strokeWidth={1.5} />
-          <span className="font-semibold text-[12px]">My Orders</span>
+          <span className="font-semibold text-[14px]">My Orders</span>
         </DropdownMenuItem>
 
         <DropdownMenuItem 
@@ -91,7 +91,7 @@ export default function DropdownProfile() {
           onClick={() => router.push('/customer/wishlist')}
         >
           <Heart className="size-4 text-gray-500" strokeWidth={1.5} />
-          <span className="font-semibold text-[12px]">Saved Items</span>
+          <span className="font-semibold text-[14px]">Saved Items</span>
         </DropdownMenuItem>
 
         <DropdownMenuItem 
@@ -99,7 +99,7 @@ export default function DropdownProfile() {
           onClick={() => router.push('/customer/pay-small-small')}
         >
           <Banknote className="size-4 text-gray-500" strokeWidth={1.5} />
-          <span className="font-semibold text-[12px]"> Installment </span>
+          <span className="font-semibold text-[14px]"> Installment </span>
         </DropdownMenuItem>
 
       
@@ -111,7 +111,7 @@ export default function DropdownProfile() {
           onClick={() => handleLogout()}
         >
           <LogOut className="size-4 text-[#e52e2e]" strokeWidth={1.5} />
-          <span className="font-semibold text-[12px]">Logout</span>
+          <span className="font-semibold text-[14px]">Logout</span>
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

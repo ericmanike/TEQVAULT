@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { 
-  Menu, X, LayoutDashboard, ShoppingBag, Tag, Users, LogOut, ShieldAlert, KeyRound, Loader2, ClipboardList, BarChart3
+  Menu, X, LayoutDashboard, ShoppingBag, Tag, Users, LogOut, ShieldAlert, KeyRound, Loader2, ClipboardList, BarChart3, MessageSquareHeart
 } from 'lucide-react';
 import { useAuth } from '@/components/AuthContext';
 import { supabase } from '@/lib/supabase';
@@ -32,6 +32,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     { name: 'Users', href: '/admin/users', icon: Users },
     { name: 'Orders', href: '/admin/orders', icon: ClipboardList },
     { name: 'Reports', href: '/admin/reports', icon: BarChart3 },
+    { name: 'Feedbacks', href: '/admin/feedbacks', icon: MessageSquareHeart },
   ];
 
   useEffect(() => {

@@ -219,10 +219,10 @@ export default function AdminUsersPage() {
                       <div className="flex justify-center items-center gap-2">
                         <button 
                           onClick={() => setDeletingId(user.id)}
-                          className="p-2 bg-slate-50 hover:bg-rose-50 hover:text-rose-600 text-slate-500 rounded-lg border border-slate-200 hover:border-rose-100 transition cursor-pointer shadow-xs"
+                          className="p-2.5 min-w-[40px] min-h-[40px] flex items-center justify-center bg-slate-50 hover:bg-rose-50 hover:text-rose-600 text-slate-600 rounded-xl border border-slate-200 hover:border-rose-100 transition cursor-pointer shadow-2xs"
                           title="Delete User"
                         >
-                          <Trash2 size={14} />
+                          <Trash2 size={16} />
                         </button>
                       </div>
                     </td>

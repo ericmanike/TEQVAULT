@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState, useMemo } from 'react';
 import { 
-  MessageSquareHeart, Star, Search, Filter, RefreshCw, Download, 
+  MessageSquareHeart, Search, Filter, RefreshCw, Download, 
   Trash2, CheckCircle2, Clock, Eye, AlertCircle, Copy, Check,
   User, Mail, Phone, Sparkles, MessageCircle, ArrowUpDown, ChevronRight
 } from 'lucide-react';
@@ -80,7 +80,6 @@ export default function AdminFeedbacksPage() {
 
   // Filters
   const [searchTerm, setSearchTerm] = useState('');
-  const [selectedRating, setSelectedRating] = useState<string>('all');
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [selectedStatus, setSelectedStatus] = useState<string>('all');
   const [selectedFeedback, setSelectedFeedback] = useState<FeedbackItem | null>(null);
@@ -186,10 +185,6 @@ export default function AdminFeedbacksPage() {
         item.message?.toLowerCase().includes(searchTerm.toLowerCase()) ||
         item.category?.toLowerCase().includes(searchTerm.toLowerCase());
 
-      // Rating filter
-      const matchesRating =
-        selectedRating === 'all' || item.rating === Number(selectedRating);
-
       // Category filter
       const matchesCategory =
         selectedCategory === 'all' || item.category === selectedCategory;
@@ -198,33 +193,31 @@ export default function AdminFeedbacksPage() {
       const matchesStatus =
         selectedStatus === 'all' || item.status === selectedStatus;
 
-      return matchesSearch && matchesRating && matchesCategory && matchesStatus;
+      return matchesSearch && matchesCategory && matchesStatus;
     });
-  }, [feedbacks, searchTerm, selectedRating, selectedCategory, selectedStatus]);
+  }, [feedbacks, searchTerm, selectedCategory, selectedStatus]);
 
   // Key Metrics
   const stats = useMemo(() => {
     const total = feedbacks.length;
-    if (total === 0) return { total: 0, avg: 0, newCount: 0, fiveStars: 0 };
+    if (total === 0) return { total: 0, newCount: 0, reviewedCount: 0, resolvedCount: 0 };
 
-    const sumRatings = feedbacks.reduce((acc, curr) => acc + (curr.rating || 0), 0);
-    const avg = (sumRatings / total).toFixed(1);
     const newCount = feedbacks.filter((f) => f.status === 'new').length;
-    const fiveStars = feedbacks.filter((f) => f.rating === 5).length;
+    const reviewedCount = feedbacks.filter((f) => f.status === 'reviewed').length;
+    const resolvedCount = feedbacks.filter((f) => f.status === 'resolved').length;
 
-    return { total, avg, newCount, fiveStars };
+    return { total, newCount, reviewedCount, resolvedCount };
   }, [feedbacks]);
 
   // Export to CSV
   const handleExportCSV = () => {
-    const headers = ['ID', 'Date', 'Name', 'Email', 'Phone', 'Rating', 'Category', 'Status', 'Message'];
+    const headers = ['ID', 'Date', 'Name', 'Email', 'Phone', 'Category', 'Status', 'Message'];
     const rows = filteredFeedbacks.map((f) => [
       f.id,
       new Date(f.created_at).toLocaleString(),
       `"${f.name || 'Anonymous'}"`,
       `"${f.email || ''}"`,
       `"${f.phone || ''}"`,
-      f.rating,
       `"${f.category}"`,
       f.status,
       `"${(f.message || '').replace(/"/g, '""')}"`,
@@ -285,7 +278,7 @@ CREATE POLICY "Admins delete all feedbacks" ON public.feedbacks FOR DELETE TO au
             Customer Feedbacks
           </h1>
           <p className="text-sm text-slate-500">
-            Real-time reviews, ratings, and feature suggestions from shoppers.
+            Real-time suggestions, reviews, and shopper feedback.
           </p>
         </div>
 
@@ -343,8 +336,8 @@ CREATE POLICY "Admins delete all feedbacks" ON public.feedbacks FOR DELETE TO au
         <div className="p-5 rounded-2xl bg-white border border-slate-100 shadow-sm flex flex-col justify-between space-y-3">
           <div className="flex items-center justify-between">
             <span className="text-xs font-bold uppercase tracking-wider text-slate-500">Total Feedbacks</span>
-            <div className="p-2 rounded-xl bg-blue-50 text-blue-600">
-              <MessageCircle size={18} />
+            <div className="p-2 rounded-xl bg-orange-50 text-orange-600">
+              <MessageSquareHeart size={18} />
             </div>
           </div>
           <div>
@@ -353,50 +346,45 @@ CREATE POLICY "Admins delete all feedbacks" ON public.feedbacks FOR DELETE TO au
           </div>
         </div>
 
-        {/* Average Rating */}
-        <div className="p-5 rounded-2xl bg-white border border-slate-100 shadow-sm flex flex-col justify-between space-y-3">
-          <div className="flex items-center justify-between">
-            <span className="text-xs font-bold uppercase tracking-wider text-slate-500">Average Rating</span>
-            <div className="p-2 rounded-xl bg-amber-50 text-amber-600">
-              <Star size={18} className="fill-amber-500 text-amber-500" />
-            </div>
-          </div>
-          <div>
-            <div className="flex items-baseline gap-2">
-              <span className="text-2xl sm:text-3xl font-black text-slate-900">{stats.avg}</span>
-              <span className="text-xs font-bold text-slate-400">/ 5.0</span>
-            </div>
-            <p className="text-[11px] text-emerald-600 font-bold">Overall satisfaction</p>
-          </div>
-        </div>
-
         {/* New Unread */}
         <div className="p-5 rounded-2xl bg-white border border-slate-100 shadow-sm flex flex-col justify-between space-y-3">
           <div className="flex items-center justify-between">
             <span className="text-xs font-bold uppercase tracking-wider text-slate-500">New & Pending</span>
-            <div className="p-2 rounded-xl bg-orange-50 text-orange-600">
+            <div className="p-2 rounded-xl bg-amber-50 text-amber-600">
               <Clock size={18} />
             </div>
           </div>
           <div>
-            <div className="text-2xl sm:text-3xl font-black text-orange-600">{stats.newCount}</div>
+            <div className="text-2xl sm:text-3xl font-black text-amber-600">{stats.newCount}</div>
             <p className="text-[11px] text-slate-400 font-medium">Awaiting review</p>
           </div>
         </div>
 
-        {/* 5-Star Reviews */}
+        {/* Reviewed */}
         <div className="p-5 rounded-2xl bg-white border border-slate-100 shadow-sm flex flex-col justify-between space-y-3">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-bold uppercase tracking-wider text-slate-500">5-Star Reviews</span>
-            <div className="p-2 rounded-xl bg-emerald-50 text-emerald-600">
-              <Sparkles size={18} />
+            <span className="text-xs font-bold uppercase tracking-wider text-slate-500">In Review</span>
+            <div className="p-2 rounded-xl bg-blue-50 text-blue-600">
+              <Eye size={18} />
             </div>
           </div>
           <div>
-            <div className="text-2xl sm:text-3xl font-black text-emerald-600">{stats.fiveStars}</div>
-            <p className="text-[11px] text-slate-400 font-medium">
-              {stats.total > 0 ? Math.round((stats.fiveStars / stats.total) * 100) : 0}% top ratings
-            </p>
+            <div className="text-2xl sm:text-3xl font-black text-blue-600">{stats.reviewedCount}</div>
+            <p className="text-[11px] text-slate-400 font-medium">Under review</p>
+          </div>
+        </div>
+
+        {/* Resolved */}
+        <div className="p-5 rounded-2xl bg-white border border-slate-100 shadow-sm flex flex-col justify-between space-y-3">
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-bold uppercase tracking-wider text-slate-500">Resolved</span>
+            <div className="p-2 rounded-xl bg-emerald-50 text-emerald-600">
+              <CheckCircle2 size={18} />
+            </div>
+          </div>
+          <div>
+            <div className="text-2xl sm:text-3xl font-black text-emerald-600">{stats.resolvedCount}</div>
+            <p className="text-[11px] text-slate-400 font-medium">Addressed feedback</p>
           </div>
         </div>
 
@@ -404,7 +392,7 @@ CREATE POLICY "Admins delete all feedbacks" ON public.feedbacks FOR DELETE TO au
 
       {/* Filters & Search Toolbar */}
       <div className="p-4 rounded-2xl bg-white border border-slate-100 shadow-sm space-y-3">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
           
           {/* Search Input */}
           <div className="relative flex items-center">
@@ -416,22 +404,6 @@ CREATE POLICY "Admins delete all feedbacks" ON public.feedbacks FOR DELETE TO au
               placeholder="Search by name, email, keyword..."
               className="w-full pl-10 pr-4 py-2.5 text-xs bg-slate-50 border border-slate-200 rounded-xl outline-none focus:border-slate-900 focus:bg-white text-slate-800 placeholder:text-slate-400"
             />
-          </div>
-
-          {/* Rating Filter */}
-          <div className="relative">
-            <select
-              value={selectedRating}
-              onChange={(e) => setSelectedRating(e.target.value)}
-              className="w-full px-3.5 py-2.5 text-xs bg-slate-50 border border-slate-200 rounded-xl outline-none focus:border-slate-900 focus:bg-white text-slate-700 font-medium cursor-pointer"
-            >
-              <option value="all">⭐ All Ratings</option>
-              <option value="5">⭐⭐⭐⭐⭐ (5 Stars)</option>
-              <option value="4">⭐⭐⭐⭐ (4 Stars)</option>
-              <option value="3">⭐⭐⭐ (3 Stars)</option>
-              <option value="2">⭐⭐ (2 Stars)</option>
-              <option value="1">⭐ (1 Star)</option>
-            </select>
           </div>
 
           {/* Category Filter */}
@@ -528,29 +500,8 @@ CREATE POLICY "Admins delete all feedbacks" ON public.feedbacks FOR DELETE TO au
                     </span>
                   </div>
 
-                  {/* Rating & Category Chips */}
+                  {/* Category Chip & Contacts */}
                   <div className="flex flex-wrap items-center gap-2">
-                    {/* Stars */}
-                    <div className="flex items-center gap-0.5">
-                      {[1, 2, 3, 4, 5].map((star) => (
-                        <Star
-                          key={star}
-                          size={14}
-                          className={
-                            star <= item.rating
-                              ? 'text-amber-400 fill-amber-400'
-                              : 'text-slate-200'
-                          }
-                        />
-                      ))}
-                    </div>
-
-                    <span className="text-xs font-bold text-amber-600">
-                      {item.rating}.0
-                    </span>
-
-                    <span className="text-slate-300">•</span>
-
                     <span className="text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-700">
                       {item.category}
                     </span>

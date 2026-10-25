@@ -424,19 +424,19 @@ export default function AdminProductsPage() {
       {/* Page Header */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-slate-200 pb-5">
         <div>
-          <h1 className="text-2xl font-black text-slate-900 tracking-tight flex items-center gap-2">
+          <h1 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight flex items-center gap-2">
             Products Directory 
           </h1> 
-          <p className="text-slate-550 text-sm mt-0.5 font-medium">
-            Manage your  gadgets directory, catalog pricing, and inventory levels.
+          <p className="text-slate-500 text-xs sm:text-sm mt-0.5 font-medium">
+            Manage your gadgets directory, catalog pricing, and inventory levels.
           </p>
         </div>
         <button
           onClick={handleOpenAddDrawer}
-          className="flex items-center gap-2 bg-orange-500 hover:bg-orange-600 text-white text-xs md:text-sm font-bold px-4 py-2.5 rounded-xl transition shadow-lg shadow-orange-500/20 cursor-pointer"
+          className="w-full sm:w-auto flex items-center justify-center gap-2 bg-orange-500 hover:bg-orange-600 text-white text-sm font-bold px-5 py-3 rounded-xl transition shadow-lg shadow-orange-500/20 cursor-pointer"
         >
-          <Plus size={16} />
-          Publish Gadget
+          <Plus size={18} />
+          <span>Publish Gadget</span>
         </button>
       </div>
 
@@ -560,19 +560,20 @@ export default function AdminProductsPage() {
                       </span>
                     </td>
                     <td className="py-4 px-6 text-center whitespace-nowrap">
-                      <div className="flex justify-center items-center gap-2">
+                      <div className="flex justify-center items-center gap-3.5">
                         <button 
                           onClick={() => handleEditProduct(prod)} 
-                          className="p-2 bg-slate-50 hover:bg-orange-50 text-slate-600 hover:text-orange-600 border border-slate-200 rounded-lg transition cursor-pointer" 
+                          className="p-2.5 min-w-[40px] min-h-[40px] flex items-center justify-center bg-slate-50 hover:bg-orange-50 text-slate-700 hover:text-orange-600 border border-slate-200 rounded-xl transition cursor-pointer shadow-2xs" 
                           title="Edit Product"
                         >
-                          <Edit size={14} />
+                          <Edit size={16} />
                         </button>
                         <button 
                           onClick={() => setDeletingId(prod.id)}
-                          className="p-2 bg-slate-50 hover:bg-rose-550/10 hover:bg-rose-50 hover:text-rose-600 text-slate-500 rounded-lg border border-slate-200 hover:border-rose-100 transition cursor-pointer"
+                          className="p-2.5 min-w-[40px] min-h-[40px] flex items-center justify-center bg-slate-50 hover:bg-rose-50 hover:text-rose-600 text-slate-600 rounded-xl border border-slate-200 hover:border-rose-100 transition cursor-pointer shadow-2xs"
+                          title="Delete Product"
                         >
-                          <Trash2 size={14} />
+                          <Trash2 size={16} />
                         </button>
                       </div>
                     </td>

@@ -243,17 +243,17 @@ export default function AdminDashboard() {
       {/* Header Overview */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
-          <h1 className="text-3xl font-black text-slate-900 tracking-tight flex items-center gap-2">
+          <h1 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight flex items-center gap-2">
             Dashboard Overview 
           </h1>
-          <p className="text-slate-500 text-sm mt-1 font-medium">
+          <p className="text-slate-500 text-xs sm:text-sm mt-1 font-medium">
             Real-time business insights, stock logs, and user registration analytics.
           </p>
         </div>
-        <div className="flex gap-3">
-          <Link href="/admin/products">
-            <button className="flex items-center space-x-2 bg-orange-500 hover:bg-orange-600 text-white font-bold px-4 py-2.5 rounded-xl transition duration-200 shadow-lg shadow-orange-500/25 text-sm cursor-pointer">
-              <Plus size={16} />
+        <div className="flex gap-3 w-full sm:w-auto">
+          <Link href="/admin/products" className="w-full sm:w-auto">
+            <button className="w-full sm:w-auto flex items-center justify-center space-x-2 bg-orange-500 hover:bg-orange-600 text-white font-bold px-4 py-3 rounded-xl transition duration-200 shadow-lg shadow-orange-500/25 text-sm cursor-pointer">
+              <Plus size={18} />
               <span>Add Product</span>
             </button>
           </Link>
@@ -261,35 +261,35 @@ export default function AdminDashboard() {
       </div>
 
       {/* Metric Cards */}
-      <div className="grid grid-cols-2 sm:grid-cols-2  lg:grid-cols-4 gap-6">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6">
         {statCards.map((card, idx) => (
-          <div key={idx} className="bg-white border border-slate-200 rounded-[10px] p-4 shadow-xs relative overflow-hidden group hover:border-slate-300 transition duration-250">
-            <div className="flex justify-between items-start mb-4">
+          <div key={idx} className="bg-white border border-slate-200 rounded-2xl p-4 sm:p-5 shadow-xs relative overflow-hidden group hover:border-slate-300 transition duration-250">
+            <div className="flex justify-between items-start mb-3 sm:mb-4">
               <div>
-                <p className=" text-[12px] md:text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">{card.title}</p>
-                <h3 className="text-3xl font-black text-slate-900">{card.value}</h3>
+                <p className="text-[11px] sm:text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">{card.title}</p>
+                <h3 className="text-2xl sm:text-3xl font-black text-slate-900">{card.value}</h3>
               </div>
-              <div className={`p-3 rounded-2xl border ${card.bgColor}`}>
-                <card.icon size={12} strokeWidth={2} />
+              <div className={`p-2.5 sm:p-3 rounded-xl sm:rounded-2xl border ${card.bgColor}`}>
+                <card.icon size={20} strokeWidth={2} />
               </div>
             </div>
-            <p className="text-[10px] md:text-xs text-slate-500 font-medium">{card.description}</p>
+            <p className="text-[11px] sm:text-xs text-slate-500 font-medium line-clamp-1">{card.description}</p>
           </div>
         ))}
       </div>
 
       {/* Split Lists Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8">
         
         {/* Recent Products Listed */}
-        <div className="bg-white border border-slate-200 rounded-3xl p-6 md:p-8 shadow-sm flex flex-col space-y-6">
+        <div className="bg-white border border-slate-200 rounded-2xl sm:rounded-3xl p-4 sm:p-6 md:p-8 shadow-sm flex flex-col space-y-5 sm:space-y-6">
           <div className="flex justify-between items-center">
             <div>
-              <h2 className="text-lg font-black text-slate-900 tracking-tight">Recent Products Listed</h2>
+              <h2 className="text-base sm:text-lg font-black text-slate-900 tracking-tight">Recent Products Listed</h2>
               <p className="text-xs text-slate-500">Latest gadgets available for purchase</p>
             </div>
             <Link href="/admin/products">
-              <button className="flex items-center space-x-1 text-orange-500 hover:text-orange-600 text-xs font-bold transition cursor-pointer">
+              <button className="flex items-center space-x-1 text-orange-500 hover:text-orange-600 text-xs font-bold transition cursor-pointer p-1">
                 <span>Manage all</span>
                 <ArrowUpRight size={14} />
               </button>
@@ -304,29 +304,29 @@ export default function AdminDashboard() {
               </div>
             ) : (
               recentProducts.map((prod) => (
-                <div key={prod.id} className="py-4 flex items-center justify-between first:pt-0 last:pb-0 gap-4 group">
+                <div key={prod.id} className="py-3.5 sm:py-4 flex items-center justify-between first:pt-0 last:pb-0 gap-3 group">
                   <div className="flex items-center space-x-3 truncate">
                     <img 
                       src={prod.imageUrl} 
                       alt={prod.name} 
-                      className="w-12 h-12 rounded-xl object-cover border border-slate-200 shrink-0" 
+                      className="w-12 h-12 rounded-xl object-cover border border-slate-200 shrink-0 shadow-2xs" 
                     />
                     <div className="truncate">
                       <p className="text-sm font-bold text-slate-900 group-hover:text-orange-500 transition-colors truncate">{prod.name}</p>
-                      <span className="inline-block text-[9px] bg-slate-100 border border-slate-200 text-slate-600 px-2 py-0.5 rounded-full font-bold uppercase tracking-wider mt-0.5">{prod.category}</span>
+                      <span className="inline-block text-[10px] bg-slate-100 border border-slate-200 text-slate-600 px-2 py-0.5 rounded-full font-bold uppercase tracking-wider mt-0.5">{prod.category}</span>
                     </div>
                   </div>
                   
-                  <div className="flex items-center space-x-6 shrink-0">
+                  <div className="flex items-center space-x-3 sm:space-x-5 shrink-0">
                     <div className="text-right">
-                      <p className="text-sm font-black text-slate-900 font-bold">GHS {prod.price.toLocaleString(undefined, { minimumFractionDigits: 2 })}</p>
+                      <p className="text-xs sm:text-sm font-black text-slate-900">GHS {prod.price.toLocaleString(undefined, { minimumFractionDigits: 2 })}</p>
                       <span className={`text-[10px] font-bold ${prod.stock > 0 ? 'text-emerald-600' : 'text-rose-600'}`}>
                         {prod.stock > 0 ? `${prod.stock} in stock` : 'Out of stock'}
                       </span>
                     </div>
                     <Link href="/admin/products">
-                      <button className="p-2 bg-slate-50 hover:bg-slate-100 text-slate-650 rounded-lg transition cursor-pointer border border-slate-200" title="Edit Product">
-                        <Edit size={14} />
+                      <button className="p-2.5 min-w-[38px] min-h-[38px] flex items-center justify-center bg-slate-50 hover:bg-slate-100 text-slate-700 rounded-xl transition cursor-pointer border border-slate-200 shadow-2xs" title="Edit Product">
+                        <Edit size={16} />
                       </button>
                     </Link>
                   </div>
@@ -337,14 +337,14 @@ export default function AdminDashboard() {
         </div>
 
         {/* Recent Registered Users */}
-        <div className="bg-white border border-slate-200 rounded-3xl p-6 md:p-8 shadow-sm flex flex-col space-y-6">
+        <div className="bg-white border border-slate-200 rounded-2xl sm:rounded-3xl p-4 sm:p-6 md:p-8 shadow-sm flex flex-col space-y-5 sm:space-y-6">
           <div className="flex justify-between items-center">
             <div>
-              <h2 className="text-lg font-black text-slate-900 tracking-tight">Recent User Registrations</h2>
+              <h2 className="text-base sm:text-lg font-black text-slate-900 tracking-tight">Recent User Registrations</h2>
               <p className="text-xs text-slate-500">Newly registered user profiles</p>
             </div>
             <Link href="/admin/users">
-              <button className="flex items-center space-x-1 text-orange-500 hover:text-orange-650 text-xs font-bold transition cursor-pointer">
+              <button className="flex items-center space-x-1 text-orange-500 hover:text-orange-650 text-xs font-bold transition cursor-pointer p-1">
                 <span>Manage all</span>
                 <ArrowUpRight size={14} />
               </button>
@@ -359,9 +359,9 @@ export default function AdminDashboard() {
               </div>
             ) : (
               recentUsers.map((user) => (
-                <div key={user.id} className="py-4 flex items-center justify-between first:pt-0 last:pb-0 gap-4">
+                <div key={user.id} className="py-3.5 sm:py-4 flex items-center justify-between first:pt-0 last:pb-0 gap-3">
                   <div className="flex items-center space-x-3 truncate">
-                    <div className="w-10 h-10 bg-slate-100 rounded-full flex items-center justify-center border border-slate-200 text-slate-700 font-bold shrink-0">
+                    <div className="w-10 h-10 bg-slate-100 rounded-full flex items-center justify-center border border-slate-200 text-slate-700 font-bold shrink-0 shadow-2xs">
                       {user.fullName.charAt(0).toUpperCase()}
                     </div>
                     <div className="truncate">
@@ -370,7 +370,7 @@ export default function AdminDashboard() {
                     </div>
                   </div>
                   
-                  <div className="flex items-center space-x-2 shrink-0">
+                  <div className="flex items-center space-x-2.5 sm:space-x-3 shrink-0">
                     <span className={`text-[10px] font-black uppercase px-2.5 py-1 rounded-full border ${
                       user.role === 'Admin' 
                         ? 'bg-rose-50 border border-rose-100 text-rose-700' 
@@ -380,10 +380,10 @@ export default function AdminDashboard() {
                     </span>
                     <button 
                       onClick={() => setDeletingUserId(user.id)}
-                      className="p-2 bg-slate-50 hover:bg-rose-50 hover:text-rose-600 text-slate-500 rounded-lg transition cursor-pointer border border-slate-200"
+                      className="p-2.5 min-w-[38px] min-h-[38px] flex items-center justify-center bg-slate-50 hover:bg-rose-50 hover:text-rose-600 text-slate-500 rounded-xl transition cursor-pointer border border-slate-200 shadow-2xs"
                       title="Delete User"
                     >
-                      <Trash2 size={14} />
+                      <Trash2 size={16} />
                     </button>
                   </div>
                 </div>

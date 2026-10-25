@@ -84,11 +84,7 @@ export default function DropdownProfile() {
             {user.user_metadata?.full_name || 'My Account'}
           </p>
           <p className="text-xs text-gray-500 truncate">{user.email}</p>
-          {role && (
-            <span className="inline-block mt-1 text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-orange-100 text-orange-700">
-              {role}
-            </span>
-          )}
+       
         </div>
 
         {role?.toLowerCase() === 'admin' && (

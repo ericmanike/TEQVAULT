@@ -159,51 +159,58 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       </aside>
 
       {/* Mobile Top Header - Visible on <md */}
-      <header className="md:hidden bg-white border-b border-gray-200 px-6 py-4 flex items-center justify-between sticky top-0 z-30">
-        <div className="flex items-center space-x-2">
-          <div className="w-8 h-8 bg-orange-500 rounded-lg flex items-center justify-center text-white font-black text-sm tracking-wider">
+      <header className="md:hidden bg-white border-b border-gray-200 px-4 sm:px-6 py-3.5 flex items-center justify-between sticky top-0 z-30 shadow-xs">
+        <div className="flex items-center space-x-2.5">
+          <div className="w-9 h-9 bg-orange-500 rounded-xl flex items-center justify-center text-white font-black text-sm tracking-wider shadow-md shadow-orange-500/20">
             A
           </div>
-          <span className="font-black text-md text-slate-900 tracking-widest">TEQVAULT ADMIN</span>
+          <span className="font-black text-base text-slate-900 tracking-wider">TEQVAULT ADMIN</span>
         </div>
         <button 
           onClick={() => setMobileMenuOpen(!mobileMenuOpen)} 
-          className="p-2 rounded-lg bg-gray-50 hover:bg-gray-100 text-slate-600 cursor-pointer border border-gray-200"
+          className="p-2.5 min-w-[42px] min-h-[42px] flex items-center justify-center rounded-xl bg-gray-50 hover:bg-gray-100 text-slate-700 cursor-pointer border border-gray-200 transition"
+          aria-label="Toggle navigation menu"
         >
-          {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+          {mobileMenuOpen ? <X size={22} /> : <Menu size={22} />}
         </button>
       </header>
 
       {/* Mobile Menu Drawer Overlay */}
       {mobileMenuOpen && (
         <div 
-          className="md:hidden fixed inset-0 bg-slate-955/40 backdrop-blur-xs z-40" 
+          className="md:hidden fixed inset-0 bg-slate-950/50 backdrop-blur-xs z-50 transition-opacity" 
           onClick={() => setMobileMenuOpen(false)}
         >
           <aside 
-            className="w-3/4 max-w-xs h-full bg-white border-r border-gray-200 flex flex-col p-6 space-y-6 shadow-2xl animate-in slide-in-from-left duration-250"
+            className="w-[84vw] max-w-xs h-full bg-white border-r border-gray-200 flex flex-col p-5 sm:p-6 shadow-2xl animate-in slide-in-from-left duration-250"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex items-center justify-between pb-4 border-b border-gray-150">
-              <span className="font-black text-slate-900 tracking-wider">TEQVAULT ADMIN</span>
+              <div className="flex items-center space-x-2.5">
+                <div className="w-8 h-8 bg-orange-500 rounded-lg flex items-center justify-center text-white font-black text-sm tracking-wider">
+                  A
+                </div>
+                <span className="font-black text-slate-900 tracking-wider text-sm">TEQVAULT ADMIN</span>
+              </div>
               <button 
                 onClick={() => setMobileMenuOpen(false)} 
-                className="text-gray-400 hover:text-gray-600"
+                className="p-2 rounded-xl bg-gray-100 hover:bg-gray-200 text-gray-500 hover:text-gray-700 transition cursor-pointer"
+                aria-label="Close menu"
               >
                 <X size={20} />
               </button>
             </div>
             
-            <nav className="flex-1 space-y-3.5">
+            <nav className="flex-1 py-4 space-y-2 overflow-y-auto">
               {menuItems.map((item) => {
                 const isActive = pathname === item.href || (item.href !== '/admin' && pathname.startsWith(item.href));
                 return (
-                  <Link key={item.href} href={item.href}>
+                  <Link key={item.href} href={item.href} className="block">
                     <button
-                      className={`w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-sm font-semibold transition-all duration-200 cursor-pointer ${
+                      className={`w-full flex items-center space-x-3.5 px-4 py-3.5 rounded-xl text-sm font-semibold transition-all duration-200 cursor-pointer ${
                         isActive 
-                          ? 'bg-orange-500 text-white shadow-lg' 
-                          : 'text-black hover:bg-slate-50'
+                          ? 'bg-orange-500 text-white shadow-md shadow-orange-500/25' 
+                          : 'text-slate-700 hover:bg-slate-50'
                       }`}
                     >
                       <item.icon size={20} className={isActive ? 'text-white' : 'text-[#1E2939]'} />
@@ -215,18 +222,18 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             </nav>
 
             <div className="pt-4 border-t border-gray-150 space-y-3">
-              <div className="flex items-center space-x-3">
-                <div className="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center font-bold text-xs text-white uppercase select-none">
+              <div className="flex items-center space-x-3 bg-slate-50 p-2.5 rounded-xl border border-slate-100">
+                <div className="w-9 h-9 bg-blue-500 rounded-full flex items-center justify-center font-bold text-xs text-white uppercase select-none shrink-0 shadow-xs">
                   {user.email?.charAt(0).toUpperCase()}
                 </div>
                 <div className="truncate flex-1">
                   <p className="text-xs font-bold text-slate-800 truncate">{user.user_metadata?.full_name || 'Admin'}</p>
-                  <p className="text-[10px] text-slate-500 truncate">{user.email}</p>
+                  <p className="text-[11px] text-slate-500 truncate">{user.email}</p>
                 </div>
               </div>
               <button  
                 onClick={handleLogout}
-                className="w-full flex items-center justify-center space-x-2 bg-gray-50 hover:bg-red-50 hover:text-red-600 text-gray-500 font-semibold py-2 rounded-xl text-sm transition-all cursor-pointer border border-gray-200 hover:border-red-100"
+                className="w-full flex items-center justify-center space-x-2 bg-gray-50 hover:bg-red-50 hover:text-red-600 text-gray-600 font-bold py-3 px-4 rounded-xl text-sm transition-all cursor-pointer border border-gray-200 hover:border-red-100"
               >
                 <LogOut size={16} />
                 <span>Logout</span>
@@ -237,7 +244,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       )}
 
       {/* Main Content Area */}
-      <main className="flex-1 p-6 md:p-8 overflow-y-auto max-w-full">
+      <main className="flex-1 p-3.5 sm:p-6 md:p-8 overflow-y-auto max-w-full">
         {children}
       </main>
     </div>

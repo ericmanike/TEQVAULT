@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Star, MessageSquareHeart, Send, CheckCircle2, Sparkles, User, Mail, Phone, Loader2 } from 'lucide-react';
+import { X, Star, MessageSquareHeart, Send, CheckCircle2, Sparkles, User, Mail, Phone, Loader2, ChevronDown } from 'lucide-react';
 import { supabase } from '@/lib/supabase';
 import { useAuth } from './AuthContext';
 import { toast } from 'sonner';
@@ -13,12 +13,12 @@ interface FeedbackModalProps {
 }
 
 const CATEGORIES = [
-  { id: 'General', label: 'General Experience', emoji: '🌟' },
-  { id: 'Website Usability', label: 'Website & App', emoji: '💻' },
-  { id: 'Product Quality', label: 'Product Quality', emoji: '📦' },
-  { id: 'Pricing & Deals', label: 'Pricing & Deals', emoji: '💰' },
-  { id: 'Delivery & Service', label: 'Delivery & Service', emoji: '🚚' },
-  { id: 'Suggestion', label: 'Feature Suggestion', emoji: '💡' },
+  { id: 'General', label: 'General Experience' },
+  { id: 'Website Usability', label: 'Website & App Usability' },
+  { id: 'Product Quality', label: 'Product Quality' },
+  { id: 'Pricing & Deals', label: 'Pricing & Deals' },
+  { id: 'Delivery & Service', label: 'Delivery & Customer Service' },
+  { id: 'Suggestion', label: 'Feature Suggestion' },
 ];
 
 const RATING_LABELS: Record<number, { text: string; color: string }> = {
@@ -188,27 +188,70 @@ export default function FeedbackModal({ isOpen, onClose }: FeedbackModalProps) {
 
 
 
-              {/* Feedback Category Chips */}
+              {/* Rating Section */}
+              <div className="space-y-2 py-1 bg-slate-50/70 p-3.5 rounded-2xl border border-slate-150/80">
+                <div className="flex items-center justify-between">
+                  <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider">
+                    Rate Your Experience <span className="text-red-500">*</span>
+                  </label>
+                  <span className="text-[11px] font-bold text-amber-600 bg-amber-50 px-2.5 py-0.5 rounded-full border border-amber-200/70">
+                    {hoverRating || rating} / 5 Stars
+                  </span>
+                </div>
+
+                <div className="flex items-center gap-1.5 pt-0.5">
+                  {[1, 2, 3, 4, 5].map((star) => {
+                    const isActive = (hoverRating || rating) >= star;
+                    return (
+                      <button
+                        type="button"
+                        key={star}
+                        onClick={() => setRating(star)}
+                        onMouseEnter={() => setHoverRating(star)}
+                        onMouseLeave={() => setHoverRating(null)}
+                        className="p-1 transition-transform hover:scale-115 active:scale-95 focus:outline-none cursor-pointer"
+                        aria-label={`Rate ${star} star${star > 1 ? 's' : ''}`}
+                      >
+                        <Star
+                          size={26}
+                          className={`transition-colors duration-150 ${
+                            isActive
+                              ? 'fill-amber-400 text-amber-400 drop-shadow-xs'
+                              : 'text-slate-300 hover:text-slate-400'
+                          }`}
+                        />
+                      </button>
+                    );
+                  })}
+                </div>
+
+                <p className={`text-xs font-semibold ${RATING_LABELS[hoverRating || rating]?.color || 'text-slate-500'}`}>
+                  {RATING_LABELS[hoverRating || rating]?.text}
+                </p>
+              </div>
+
+              {/* Feedback Category Select */}
               <div className="space-y-1.5">
-                <label className="block text-xs font-bold text-slate-600 uppercase tracking-wider">
+                <label htmlFor="feedback-category" className="block text-xs font-bold text-slate-600 uppercase tracking-wider">
                   Category
                 </label>
-                <div className="flex flex-wrap gap-2">
-                  {CATEGORIES.map((cat) => (
-                    <button
-                      type="button"
-                      key={cat.id}
-                      onClick={() => setCategory(cat.id)}
-                      className={`text-xs font-semibold px-3 py-1.5 rounded-xl border transition-all cursor-pointer flex items-center gap-1.5 ${
-                        category === cat.id
-                          ? 'bg-slate-900 text-white border-slate-900 shadow-sm'
-                          : 'bg-white text-slate-600 border-slate-200 hover:bg-slate-50 hover:border-slate-300'
-                      }`}
-                    >
-                      <span>{cat.emoji}</span>
-                      <span>{cat.label}</span>
-                    </button>
-                  ))}
+                <div className="relative flex items-center">
+                  <select
+                    id="feedback-category"
+                    value={category}
+                    onChange={(e) => setCategory(e.target.value)}
+                    className="w-full appearance-none bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-xs sm:text-sm font-semibold text-slate-800 outline-none focus:border-slate-900 focus:bg-white transition-all cursor-pointer pr-10 shadow-2xs"
+                  >
+                    {CATEGORIES.map((cat) => (
+                      <option key={cat.id} value={cat.id} className="text-slate-800 font-medium py-1">
+                        {cat.label}
+                      </option>
+                    ))}
+                  </select>
+                  <ChevronDown
+                    size={16}
+                    className="absolute right-3.5 text-slate-400 pointer-events-none"
+                  />
                 </div>
               </div>
 

@@ -67,7 +67,18 @@ export function proxy(req: NextRequest) {
     }
   }
 
-  return NextResponse.next();
+  // Forward user role to Server Components & API routes via request headers
+  const requestHeaders = new Headers(req.headers);
+  const userRole = getUserRoleFromToken(token)?.toLowerCase();
+  if (userRole) {
+    requestHeaders.set('x-user-role', userRole);
+  }
+
+  return NextResponse.next({
+    request: {
+      headers: requestHeaders,
+    },
+  });
 }
 
 export const config = {

@@ -16,7 +16,7 @@ interface MenuItem {
 }
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
-  const { user, loading: authLoading, signOut } = useAuth();
+  const { user, role, loading: authLoading, signOut } = useAuth();
   const pathname = usePathname();
   const router = useRouter();
 
@@ -45,19 +45,12 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         return;
       }
 
-      const ADMIN_EMAILS = ['manikeeric@gmail.com'];
-      const userEmail = user.email?.toLowerCase();
-
-      if (userEmail && ADMIN_EMAILS.includes(userEmail)) {
-        setIsAdmin(true);
-      } else {
-        setIsAdmin(false);
-      }
+      setIsAdmin(role?.toLowerCase() === 'admin');
       setDbLoading(false);
     }
 
     checkAdminRole();
-  }, [user, authLoading]);
+  }, [user, role, authLoading]);
 
   // Handle Logout
   const handleLogout = async () => {
@@ -87,7 +80,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   // 2. Not logged in state
   if (!user) {
     return (
-      <div className="min-h-screen bg-zinc-100 flex items-center justify-center p-4">
+      <div className="min-h-screen  flex items-center justify-center p-4">
         <div className="bg-slate-900 border border-slate-800 rounded-2xl p-8 max-w-md w-full shadow-2xl text-center space-y-6">
           <div className="w-16 h-16 bg-orange-500/10 border border-orange-500/20 rounded-full flex items-center justify-center mx-auto text-orange-500">
             <KeyRound size={32} />
@@ -109,49 +102,6 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     );
   }
 
-  // 3. Logged in but not an Admin
-  if (isAdmin === false) {
-    return (
-      <div className="min-h-screen bg-zinc-100 flex items-center justify-center p-4">
-        <div className="bg-slate-900 border border-slate-800 rounded-3xl p-8 max-w-lg w-full shadow-2xl space-y-6 text-center">
-          <div className="w-20 h-20 bg-red-500/10 border border-red-500/20 rounded-full flex items-center justify-center mx-auto text-red-500 animate-bounce">
-            <ShieldAlert size={40} />
-          </div>
-          <div className="space-y-3">
-            <h1 className="text-3xl font-black text-white tracking-tight">Access Denied</h1>
-            <p className="text-slate-300 font-medium">
-              You do not have the required permissions to view the administration panel.
-            </p>
-            <div className="bg-slate-950/65 border border-slate-850 p-4 rounded-xl text-left space-y-2 text-xs md:text-sm text-slate-400 font-mono">
-              <p className="text-red-400 font-bold">Diagnostics Details:</p>
-              <p>Connected User: {user.email}</p>
-              <p>Role Assigned: <span className="text-orange-400 font-bold">User</span> (requires <span className="text-emerald-400 font-bold">Admin</span>)</p>
-              <p className="mt-2 text-slate-500 border-t border-slate-850 pt-2">
-                To grant access, add this user's email to the `ADMIN_EMAILS` list in `app/(NonHF)/admin/layout.tsx`:
-              </p>
-              <span className="text-emerald-400 font-bold block">
-                ADMIN_EMAILS = ['manikeeric@gmail.com', '{user.email}']
-              </span>
-            </div>
-          </div>
-          <div className="flex gap-4">
-            <button
-              onClick={handleLogout}
-              className="flex-1 bg-slate-800 hover:bg-slate-700 text-white font-bold py-3 px-6 rounded-xl transition duration-200 cursor-pointer"
-            >
-              Sign Out
-            </button>
-            <button
-              onClick={() => router.push('/shop')}
-              className="flex-1 bg-orange-500 hover:bg-orange-600 text-white font-bold py-3 px-6 rounded-xl transition duration-200 shadow-lg shadow-orange-500/20 cursor-pointer"
-            >
-              Go to Store
-            </button>
-          </div>
-        </div>
-      </div>
-    );
-  }
 
   // 4. Authorized Admin View
   return (

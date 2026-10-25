@@ -1,6 +1,6 @@
 "use client"
 import React, { useState } from "react"
-import { LogOut, User,Banknote, ChevronDown, ChevronUp, ShoppingBag, Heart } from "lucide-react"
+import { LogOut, User, Banknote, ChevronDown, ChevronUp, ShoppingBag, Heart, Shield } from "lucide-react"
 import { useRouter } from "next/navigation"
 
 import {
@@ -14,7 +14,7 @@ import { useAuth } from "./AuthContext"
 
 export default function DropdownProfile() {
   const router = useRouter();
-  const { user, loading, signOut } = useAuth();
+  const { user, role, loading, signOut } = useAuth();
   const [isOpen, setIsOpen] = useState(false);
 
   const handleLogout = async () => {
@@ -63,63 +63,84 @@ export default function DropdownProfile() {
   return (
     <DropdownMenu modal={false} onOpenChange={setIsOpen}>
       <DropdownMenuTrigger asChild>
-        <button className="flex items-center gap-1.5 focus:outline-none cursor-pointer group ">
-          <div className="w-8 h-8 md:w-9 md:h-9 bg-[#e52e2e] hover:bg-red-700 text-white rounded-full flex items-center justify-center font-bold text-[10px] md:text-[14px] p-2 transition shadow-sm select-none">
+        <button className="flex items-center gap-1.5 focus:outline-none cursor-pointer group">
+          <div className="w-9 h-9 md:w-10 md:h-10 bg-[#e52e2e] hover:bg-red-700 text-white rounded-full flex items-center justify-center font-bold text-xs md:text-sm transition shadow-sm select-none">
             {initials}
           </div>
           {isOpen ? (
-            <ChevronUp className="w-3.5 h-3.5 text-gray-700 transition-transform duration-200" />
+            <ChevronUp className="w-4 h-4 text-gray-700 transition-transform duration-200" />
           ) : (
-            <ChevronDown className="w-3.5 h-3.5 text-gray-700 transition-transform duration-200" />
+            <ChevronDown className="w-4 h-4 text-gray-700 transition-transform duration-200" />
           )}
         </button>
       </DropdownMenuTrigger>
       <DropdownMenuContent 
         align="end" 
-        className="w-48 bg-white border border-slate-100 rounded-xl shadow-lg p-1.5 z-[100] mt-2 mr-2"
+        className="w-64 sm:w-56 bg-white border border-slate-200 rounded-2xl shadow-xl p-2 z-[100] mt-2 mr-1"
       >
+        {/* User preview header */}
+        <div className="px-3.5 py-2.5 mb-1.5 border-b border-gray-100 bg-slate-50/80 rounded-xl">
+          <p className="text-sm font-bold text-gray-900 truncate">
+            {user.user_metadata?.full_name || 'My Account'}
+          </p>
+          <p className="text-xs text-gray-500 truncate">{user.email}</p>
+          {role && (
+            <span className="inline-block mt-1 text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-orange-100 text-orange-700">
+              {role}
+            </span>
+          )}
+        </div>
+
+        {role?.toLowerCase() === 'admin' && (
+          <DropdownMenuItem 
+            className="flex items-center gap-3 px-3.5 py-3 sm:py-2.5 rounded-xl text-orange-600 focus:bg-orange-50 focus:text-orange-600 cursor-pointer transition-colors outline-hidden border-none" 
+            onClick={() => router.push('/admin')}
+          >
+            <Shield className="size-5 sm:size-4 text-orange-500" strokeWidth={1.5} />
+            <span className="font-semibold text-[15px] sm:text-[14px]">Admin Panel</span>
+          </DropdownMenuItem>
+        )}
+
         <DropdownMenuItem 
-          className="flex items-center gap-3 px-4 py-3 rounded-lg text-gray-700 focus:bg-slate-50 focus:text-gray-700 cursor-pointer transition-colors outline-hidden border-none" 
+          className="flex items-center gap-3 px-3.5 py-3 sm:py-2.5 rounded-xl text-gray-700 focus:bg-slate-50 focus:text-gray-700 cursor-pointer transition-colors outline-hidden border-none" 
           onClick={() => router.push('/customer/account')}
         >
-          <User className="size-4 text-gray-500" strokeWidth={1.5} />
-          <span className="font-semibold text-[14px]">My Account</span>
+          <User className="size-5 sm:size-4 text-gray-500" strokeWidth={1.5} />
+          <span className="font-semibold text-[15px] sm:text-[14px]">My Account</span>
         </DropdownMenuItem>
 
         <DropdownMenuItem 
-          className="flex items-center gap-3 px-4 py-3 rounded-lg text-gray-700 focus:bg-slate-50 focus:text-gray-700 cursor-pointer transition-colors outline-hidden border-none" 
+          className="flex items-center gap-3 px-3.5 py-3 sm:py-2.5 rounded-xl text-gray-700 focus:bg-slate-50 focus:text-gray-700 cursor-pointer transition-colors outline-hidden border-none" 
           onClick={() => router.push('/customer/orders')}
         >
-          <ShoppingBag className="size-4 text-gray-500" strokeWidth={1.5} />
-          <span className="font-semibold text-[14px]">My Orders</span>
+          <ShoppingBag className="size-5 sm:size-4 text-gray-500" strokeWidth={1.5} />
+          <span className="font-semibold text-[15px] sm:text-[14px]">My Orders</span>
         </DropdownMenuItem>
 
         <DropdownMenuItem 
-          className="flex items-center gap-3 px-4 py-3 rounded-lg text-gray-700 focus:bg-slate-50 focus:text-gray-700 cursor-pointer transition-colors outline-hidden border-none" 
+          className="flex items-center gap-3 px-3.5 py-3 sm:py-2.5 rounded-xl text-gray-700 focus:bg-slate-50 focus:text-gray-700 cursor-pointer transition-colors outline-hidden border-none" 
           onClick={() => router.push('/customer/wishlist')}
         >
-          <Heart className="size-4 text-gray-500" strokeWidth={1.5} />
-          <span className="font-semibold text-[14px]">Whishlist</span>
+          <Heart className="size-5 sm:size-4 text-gray-500" strokeWidth={1.5} />
+          <span className="font-semibold text-[15px] sm:text-[14px]">Wishlist</span>
         </DropdownMenuItem>
 
         <DropdownMenuItem 
-          className="flex items-center gap-3 px-4 py-3 rounded-lg text-gray-700 focus:bg-slate-50 focus:text-gray-700 cursor-pointer transition-colors outline-hidden border-none" 
+          className="flex items-center gap-3 px-3.5 py-3 sm:py-2.5 rounded-xl text-gray-700 focus:bg-slate-50 focus:text-gray-700 cursor-pointer transition-colors outline-hidden border-none" 
           onClick={() => router.push('/customer/pay-small-small')}
         >
-          <Banknote className="size-4 text-gray-500" strokeWidth={1.5} />
-          <span className="font-semibold text-[14px]"> Installment </span>
+          <Banknote className="size-5 sm:size-4 text-gray-500" strokeWidth={1.5} />
+          <span className="font-semibold text-[15px] sm:text-[14px]">Installment</span>
         </DropdownMenuItem>
 
-      
-        
-   
+        <div className="my-1 border-t border-gray-100" />
 
         <DropdownMenuItem 
-          className="flex items-center gap-3 px-4 py-3 rounded-lg text-[#e52e2e] focus:bg-red-50 focus:text-[#e52e2e] cursor-pointer transition-colors outline-hidden border-none" 
+          className="flex items-center gap-3 px-3.5 py-3 sm:py-2.5 rounded-xl text-[#e52e2e] focus:bg-red-50 focus:text-[#e52e2e] cursor-pointer transition-colors outline-hidden border-none" 
           onClick={() => handleLogout()}
         >
-          <LogOut className="size-4 text-[#e52e2e]" strokeWidth={1.5} />
-          <span className="font-semibold text-[14px]">Logout</span>
+          <LogOut className="size-5 sm:size-4 text-[#e52e2e]" strokeWidth={1.5} />
+          <span className="font-semibold text-[15px] sm:text-[14px]">Logout</span>
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

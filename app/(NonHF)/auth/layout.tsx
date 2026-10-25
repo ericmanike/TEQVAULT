@@ -22,7 +22,7 @@ export default function AuthLayout({ children }: AuthLayoutProps) {
             href="/"
             className="group cursor-pointer select-none"
           >
-            <span className="text-2xl font-extrabold text-slate-900 tracking-tight logo">
+            <span className="text-2xl font-extrabold text-gray-800 tracking-tight logo">
               TEQVAULT
             </span>
           </Link>

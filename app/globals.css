@@ -91,16 +91,15 @@
     --tw-ring-shadow: none !important;
   }
 }
-.logo{
- display: inline-block;
+.logo {
+  display: inline-block;
   font-size: 24px;
   font-weight: 900;
   letter-spacing: -0.02em;
-  background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 30%, #ea580c 100%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-  filter: drop-shadow(0 1px 1px rgba(255, 255, 255, 0.4));
+  color: #1f2937;
+  -webkit-text-fill-color: #1f2937;
+  background: none;
+  filter: none;
 }
 
 /* Custom Thin Scrollbar */

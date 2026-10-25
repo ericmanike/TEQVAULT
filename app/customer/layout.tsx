@@ -35,7 +35,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                 {/* Mobile Top Navigation Bar */}
                 <div className="md:hidden flex items-center justify-between bg-white px-5 py-4 shadow-md mb-4 border-b border-gray-200">
                     <div className="flex items-center gap-2">
-                        <span className="logo text-base font-extrabold">TEQVAULT</span>
+                        <span className="logo text-base font-extrabold text-gray-800">TEQVAULT</span>
                     </div>
                     <button
                         onClick={() => setIsMobileSidebarOpen(true)}

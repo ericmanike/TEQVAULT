@@ -59,8 +59,10 @@ export function proxy(req: NextRequest) {
   // Admin route authorization check (role-based)
   if (req.nextUrl.pathname.startsWith('/admin')) {
     const userRole = getUserRoleFromToken(token)?.toLowerCase();
+    console.log('user role here',userRole)
 
     if (userRole !== 'admin') {
+      console.log('not admin')
       return NextResponse.redirect(new URL("/shop", req.url));
     }
   }

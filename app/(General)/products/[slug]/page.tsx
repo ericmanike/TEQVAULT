@@ -7,7 +7,7 @@ interface ProductPageProps {
     params: Promise<{ slug: string }>;
 }
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.teqvault.com';
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://teqvault.app';
 
 export async function generateMetadata({ params }: ProductPageProps): Promise<Metadata> {
     const { slug } = await params;

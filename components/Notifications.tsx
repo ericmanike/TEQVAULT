@@ -96,7 +96,7 @@ const NotificationsPanel: React.FC<NotificationsPanelProps> = ({ isOpen, setIsOp
     setIsTyping(true);
 
     setTimeout(() => {
-      let aiResponseText = "Thank you for reaching out! Our team is available 24/7. You can also contact us directly at 054 344 2518 or support@teqvault.com.";
+      let aiResponseText = "Thank you for reaching out! Our team is available 24/7. You can also contact us directly at 054 344 2518 or support@teqvault.app.";
       let actionLink: Message['actionLink'] | undefined = undefined;
 
       const lower = query.toLowerCase();
@@ -113,7 +113,7 @@ const NotificationsPanel: React.FC<NotificationsPanelProps> = ({ isOpen, setIsOp
         aiResponseText = "🏪 Our store is located in Ghana. We are open Monday – Saturday from 8:00 AM to 8:00 PM.";
         actionLink = { label: 'Contact Us', href: '/contact' };
       } else if (lower.includes('contact') || lower.includes('call') || lower.includes('phone') || lower.includes('whatsapp')) {
-        aiResponseText = "📞 You can call or WhatsApp us directly at 054 344 2518 or email support@teqvault.com.";
+        aiResponseText = "📞 You can call or WhatsApp us directly at 054 344 2518 or email support@teqvault.app.";
         actionLink = { label: 'Contact Page', href: '/contact' };
       } else if (lower.includes('phone') || lower.includes('laptop') || lower.includes('buy') || lower.includes('gadget')) {
         aiResponseText = "⚡ Explore our vast catalog of verified laptops, smartphones, audio, and accessories!";

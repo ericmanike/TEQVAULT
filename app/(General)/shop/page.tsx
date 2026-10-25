@@ -2,7 +2,7 @@ import React from 'react'
 import BuySuspense from '@/components/buySuspense'
 import { Metadata } from 'next'
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.teqvault.com'
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://teqvault.app'
 
 export const metadata: Metadata = {
   title: 'Shop Quality Phones, Laptops & Accessories | TEQVAULT',

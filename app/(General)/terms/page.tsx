@@ -3,7 +3,7 @@ import { ShieldCheck, Scale, AlertCircle, FileText, CreditCard, Truck, RefreshCw
 import Link from 'next/link';
 import { Metadata } from 'next';
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.teqvault.com';
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://teqvault.app';
 
 export const metadata: Metadata = {
   title: 'Terms of Service | TEQVAULT',
@@ -143,7 +143,7 @@ export default function TermsOfServicePage() {
           <div className="p-6 bg-orange-500 text-white rounded-2xl space-y-2">
             <h3 className="font-bold text-base text-white">Contact Us</h3>
             <p className="text-xs text-white">TEQVAULT | Ghana</p>
-            <p className="text-xs text-white">Email: support@teqvault.com | Phone: 0543442518</p>
+            <p className="text-xs text-white">Email: support@teqvault.app | Phone: 0543442518</p>
           </div>
 
         </div>

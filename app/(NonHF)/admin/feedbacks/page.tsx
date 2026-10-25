@@ -24,53 +24,6 @@ export interface FeedbackItem {
   created_at: string;
 }
 
-const DEMO_FEEDBACKS: FeedbackItem[] = [
-  {
-    id: 'demo-1',
-    name: 'Kofi Mensah',
-    email: 'kofi.mensah@gmail.com',
-    phone: '0244123456',
-    rating: 5,
-    category: 'Website Usability',
-    message: 'The website is so sleek and fast! I love the Pay Small Small option and how clean the product search is on mobile.',
-    status: 'new',
-    created_at: new Date(Date.now() - 1000 * 60 * 45).toISOString(),
-  },
-  {
-    id: 'demo-2',
-    name: 'Ama Serwaa',
-    email: 'ama.serwaa@yahoo.com',
-    phone: '0558987654',
-    rating: 5,
-    category: 'Product Quality',
-    message: 'Got my M3 MacBook Pro in pristine condition. Genuine Apple warranty is verified. Thank you TEQVAULT!',
-    status: 'reviewed',
-    created_at: new Date(Date.now() - 1000 * 60 * 60 * 5).toISOString(),
-  },
-  {
-    id: 'demo-3',
-    name: 'Emmanuel Osei',
-    email: 'e.osei@outlook.com',
-    phone: null,
-    rating: 4,
-    category: 'Delivery & Service',
-    message: 'Delivery in East Legon took about 3 hours, very fast. Rider was courteous and allowed me to unbox and test before confirmation.',
-    status: 'resolved',
-    created_at: new Date(Date.now() - 1000 * 60 * 60 * 24).toISOString(),
-  },
-  {
-    id: 'demo-4',
-    name: 'Nana Yaw',
-    email: null,
-    phone: '0207654321',
-    rating: 3,
-    category: 'Pricing & Deals',
-    message: 'Prices are good, but I hope you bring more Falaa Deals on gaming keyboards and monitors next week.',
-    status: 'new',
-    created_at: new Date(Date.now() - 1000 * 60 * 60 * 48).toISOString(),
-  },
-];
-
 export default function AdminFeedbacksPage() {
   const [feedbacks, setFeedbacks] = useState<FeedbackItem[]>([]);
   const [loading, setLoading] = useState(true);
@@ -100,23 +53,17 @@ export default function AdminFeedbacksPage() {
         if (error.message.includes('not find the table') || error.message.includes('schema cache')) {
           setTableMissing(true);
         }
-        // Load fallback queue from localStorage if any, or demo data
+        // Load fallback queue from localStorage if user submitted offline
         const localQueue = JSON.parse(localStorage.getItem('teqvault_feedbacks_queue') || '[]');
-        if (localQueue.length > 0) {
-          setFeedbacks([...localQueue, ...DEMO_FEEDBACKS]);
-        } else {
-          setFeedbacks(DEMO_FEEDBACKS);
-        }
+        setFeedbacks(localQueue);
       } else {
         setTableMissing(false);
-        // Also check if there are local offline items to merge
         const localQueue = JSON.parse(localStorage.getItem('teqvault_feedbacks_queue') || '[]');
-        const combined = [...localQueue, ...(data || [])];
-        setFeedbacks(combined.length > 0 ? combined : DEMO_FEEDBACKS);
+        setFeedbacks([...localQueue, ...(data || [])]);
       }
     } catch (err) {
       console.error('Failed to load feedbacks:', err);
-      setFeedbacks(DEMO_FEEDBACKS);
+      setFeedbacks([]);
     } finally {
       setLoading(false);
       setRefreshing(false);
@@ -135,7 +82,7 @@ export default function AdminFeedbacksPage() {
         prev.map((item) => (item.id === id ? { ...item, status: newStatus } : item))
       );
 
-      if (!id.startsWith('demo-') && !id.startsWith('local_')) {
+      if (!id.startsWith('local_')) {
         const { error } = await supabase
           .from('feedbacks')
           .update({ status: newStatus, updated_at: new Date().toISOString() })
@@ -157,10 +104,10 @@ export default function AdminFeedbacksPage() {
     try {
       setFeedbacks((prev) => prev.filter((item) => item.id !== id));
 
-      if (!id.startsWith('demo-') && !id.startsWith('local_')) {
+      if (!id.startsWith('local_')) {
         const { error } = await supabase.from('feedbacks').delete().eq('id', id);
         if (error) throw error;
-      } else if (id.startsWith('local_')) {
+      } else {
         const localQueue = JSON.parse(localStorage.getItem('teqvault_feedbacks_queue') || '[]');
         const filtered = localQueue.filter((item: any) => item.id !== id);
         localStorage.setItem('teqvault_feedbacks_queue', JSON.stringify(filtered));

@@ -110,7 +110,7 @@ export default function SlimReceiptModal({ order, onClose }: SlimReceiptModalPro
                  TEQVAULT 
               </p>
               <p className="text-[10px] text-slate-600 font-semibold">
-                Ghana • support@teqvault.com
+                Ghana • support@teqvault.app
               </p>
             </div>
 

@@ -64,7 +64,6 @@ export default function AdminReportsPage() {
   const { showToast } = useToast();
   const [loading, setLoading] = useState(true);
   const [timeRange, setTimeRange] = useState<TimeRange>('30d');
-  const [useDemoData, setUseDemoData] = useState(false);
 
   // Raw fetched data states
   const [dbOrders, setDbOrders] = useState<any[]>([]);
@@ -78,7 +77,22 @@ export default function AdminReportsPage() {
       setLoading(true);
 
       const [ordersRes, productsRes, usersRes, categoriesRes] = await Promise.all([
-        supabase.from('orders').select('*').order('created_at', { ascending: true }),
+        supabase
+          .from('orders')
+          .select(`
+            *,
+            order_items (
+              id,
+              quantity,
+              price,
+              products (
+                id,
+                name,
+                categories (name)
+              )
+            )
+          `)
+          .order('created_at', { ascending: true }),
         supabase.from('products').select('*, categories(name)').order('id', { ascending: false }),
         supabase.from('users').select('*'),
         supabase.from('categories').select('*')
@@ -88,15 +102,9 @@ export default function AdminReportsPage() {
       setDbProducts(productsRes.data || []);
       setDbUsers(usersRes.data || []);
       setDbCategories(categoriesRes.data || []);
-      
-      // If db has very few or no orders, default to fallback demo toggle notice
-      if (!ordersRes.data || ordersRes.data.length < 3) {
-        setUseDemoData(true);
-      }
     } catch (err) {
       console.error('Failed to load reports data:', err);
       showToast('Error loading report data from database', 'error');
-      setUseDemoData(true);
     } finally {
       setLoading(false);
     }
@@ -116,195 +124,136 @@ export default function AdminReportsPage() {
     }
   }, [timeRange]);
 
-  // Combined analytics generator (Real vs Demo)
+  // Real database analytics generator
   const analytics = useMemo(() => {
-    if (useDemoData) {
-      // High-quality realistic analytical mock data generator scaled by timeRange
-      const days = daysLimit;
-      const timeline: TimelineData[] = [];
-      const now = new Date();
+    const now = new Date();
+    const cutoffDate = new Date();
+    cutoffDate.setDate(cutoffDate.getDate() - daysLimit);
+
+    const filteredOrders = dbOrders.filter((o: any) => new Date(o.created_at || Date.now()) >= cutoffDate);
+
+    // Map daily timeline strictly from real orders
+    const timelineMap: Record<string, { revenue: number; orders: number; customers: Set<string> }> = {};
+
+    for (let i = daysLimit - 1; i >= 0; i--) {
+      const d = new Date(now);
+      d.setDate(d.getDate() - i);
+      const key = d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+      timelineMap[key] = { revenue: 0, orders: 0, customers: new Set() };
+    }
+
+    let realTotalRevenue = 0;
+    const statusCounts: Record<string, { count: number; revenue: number }> = {};
+
+    filteredOrders.forEach((order: any) => {
+      const orderDate = new Date(order.created_at || Date.now());
+      const key = orderDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+      const val = Number(order.total || 0);
       
-      let runningRevenue = 0;
-      let totalOrdersCount = 0;
-
-      for (let i = days - 1; i >= 0; i--) {
-        const d = new Date(now);
-        d.setDate(d.getDate() - i);
-
-        // Standardized date format
-        const dateStr = d.toLocaleDateString('en-US', { 
-          month: 'short', 
-          day: 'numeric',
-          ...(days > 90 ? { year: '2-digit' } : {}) 
-        });
-
-        // Seeded random variation for natural looking curves
-        const baseRev = 450 + Math.sin(i * 0.4) * 200 + Math.random() * 300;
-        const baseOrders = Math.floor(baseRev / (45 + Math.random() * 20)) + 2;
-        const newCust = Math.floor(baseOrders * 0.4) + Math.floor(Math.random() * 3);
-
-        const rev = Math.round(baseRev);
-        runningRevenue += rev;
-        totalOrdersCount += baseOrders;
-
-        timeline.push({
-          date: dateStr,
-          revenue: rev,
-          orders: baseOrders,
-          customers: newCust,
-        });
+      if (timelineMap[key]) {
+        timelineMap[key].revenue += val;
+        timelineMap[key].orders += 1;
+        if (order.user_id) timelineMap[key].customers.add(order.user_id);
       }
+      realTotalRevenue += val;
 
-      const categories: CategoryData[] = [
-        { name: 'Smartphones & Mobile', value: 42500, count: 142, percentage: 38 },
-        { name: 'Laptops & Computers', value: 31200, count: 86, percentage: 28 },
-        { name: 'Audio & Headphones', value: 16800, count: 195, percentage: 15 },
-        { name: 'Accessories & Cables', value: 12400, count: 310, percentage: 11 },
-        { name: 'Gaming Consoles', value: 8900, count: 42, percentage: 8 },
-      ];
-
-      const orderStatuses: OrderStatusData[] = [
-        { status: 'Delivered', count: 412, revenue: 68500 },
-        { status: 'Processing', count: 68, revenue: 14200 },
-        { status: 'Shipped', count: 45, revenue: 9800 },
-        { status: 'Pending', count: 24, revenue: 4300 },
-        { status: 'Cancelled', count: 12, revenue: 1800 },
-      ];
-
-      const topProducts: TopProductData[] = [
-        { id: '1', name: 'iPhone 15 Pro Max 256GB', category: 'Smartphones', sales: 48, revenue: 57552, stock: 18 },
-        { id: '2', name: 'MacBook Pro 16" M3 Max', category: 'Laptops', sales: 24, revenue: 59976, stock: 9 },
-        { id: '3', name: 'Sony WH-1000XM5 Wireless', category: 'Audio', sales: 85, revenue: 33915, stock: 32 },
-        { id: '4', name: 'Samsung Galaxy S24 Ultra', category: 'Smartphones', sales: 36, revenue: 46764, stock: 14 },
-        { id: '5', name: 'iPad Air 10.9" M2', category: 'Tablets', sales: 52, revenue: 31148, stock: 25 },
-      ];
-
-      const totalRev = runningRevenue;
-      const aov = totalOrdersCount > 0 ? Math.round(totalRev / totalOrdersCount) : 0;
-
-      return {
-        timeline,
-        categories,
-        orderStatuses,
-        topProducts,
-        metrics: {
-          totalRevenue: totalRev,
-          revenueGrowth: '+18.4%',
-          totalOrders: totalOrdersCount,
-          ordersGrowth: '+12.1%',
-          avgOrderValue: aov,
-          aovGrowth: '+5.6%',
-          activeProductsCount: 148,
-          totalUsersCount: 384,
-          conversionRate: '3.42%'
-        }
-      };
-    } else {
-      // Compute analytics strictly from real database items
-      const now = new Date();
-      const cutoffDate = new Date();
-      cutoffDate.setDate(cutoffDate.getDate() - daysLimit);
-
-      const filteredOrders = dbOrders.filter((o: any) => new Date(o.created_at || Date.now()) >= cutoffDate);
-
-      // Map daily timeline
-      const timelineMap: Record<string, { revenue: number; orders: number; customers: number }> = {};
-
-      for (let i = daysLimit - 1; i >= 0; i--) {
-        const d = new Date(now);
-        d.setDate(d.getDate() - i);
-        const key = d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
-        timelineMap[key] = { revenue: 0, orders: 0, customers: 0 };
+      const st = order.status || 'Pending';
+      if (!statusCounts[st]) {
+        statusCounts[st] = { count: 0, revenue: 0 };
       }
+      statusCounts[st].count += 1;
+      statusCounts[st].revenue += val;
+    });
 
-      let realTotalRevenue = 0;
-      const statusCounts: Record<string, { count: number; revenue: number }> = {};
+    const timeline: TimelineData[] = Object.keys(timelineMap).map(date => ({
+      date,
+      revenue: timelineMap[date].revenue,
+      orders: timelineMap[date].orders,
+      customers: timelineMap[date].customers.size
+    }));
 
-      filteredOrders.forEach((order: any) => {
-        const orderDate = new Date(order.created_at || Date.now());
-        const key = orderDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
-        const val = Number(order.total || 0);
-        
-        if (timelineMap[key]) {
-          timelineMap[key].revenue += val;
-          timelineMap[key].orders += 1;
-        }
-        realTotalRevenue += val;
+    // Compute Category Stats strictly from real products
+    const catMap: Record<string, { count: number; value: number }> = {};
+    dbProducts.forEach((p: any) => {
+      const cName = p.categories?.name || 'Uncategorized';
+      if (!catMap[cName]) catMap[cName] = { count: 0, value: 0 };
+      catMap[cName].count += 1;
+      catMap[cName].value += Number(p.price || 0) * Number(p.stock || 1);
+    });
 
-        const st = order.status || 'Pending';
-        if (!statusCounts[st]) {
-          statusCounts[st] = { count: 0, revenue: 0 };
-        }
-        statusCounts[st].count += 1;
-        statusCounts[st].revenue += val;
-      });
+    const totalCatVal = Object.values(catMap).reduce((sum, item) => sum + item.value, 0) || 1;
+    const categories: CategoryData[] = Object.keys(catMap).map(name => ({
+      name,
+      value: catMap[name].value,
+      count: catMap[name].count,
+      percentage: Math.round((catMap[name].value / totalCatVal) * 100)
+    }));
 
-      const timeline: TimelineData[] = Object.keys(timelineMap).map(date => ({
-        date,
-        revenue: timelineMap[date].revenue,
-        orders: timelineMap[date].orders,
-        customers: Math.ceil(timelineMap[date].orders * 0.7)
-      }));
+    // Real order status breakdown
+    const orderStatuses: OrderStatusData[] = Object.keys(statusCounts).map(st => ({
+      status: st,
+      count: statusCounts[st].count,
+      revenue: statusCounts[st].revenue
+    }));
 
-      // Compute Category Stats from products
-      const catMap: Record<string, { count: number; value: number }> = {};
-      dbProducts.forEach((p: any) => {
-        const cName = p.categories?.name || 'Uncategorized';
-        if (!catMap[cName]) catMap[cName] = { count: 0, value: 0 };
-        catMap[cName].count += 1;
-        catMap[cName].value += Number(p.price || 0) * Number(p.stock || 1);
-      });
+    // Top products performance computed from actual order items and products
+    const productSalesMap: Record<string, { name: string; category: string; sales: number; revenue: number; stock: number }> = {};
 
-      const totalCatVal = Object.values(catMap).reduce((sum, item) => sum + item.value, 0) || 1;
-      const categories: CategoryData[] = Object.keys(catMap).map(name => ({
-        name,
-        value: catMap[name].value,
-        count: catMap[name].count,
-        percentage: Math.round((catMap[name].value / totalCatVal) * 100)
-      }));
-
-      const orderStatuses: OrderStatusData[] = Object.keys(statusCounts).map(st => ({
-        status: st,
-        count: statusCounts[st].count,
-        revenue: statusCounts[st].revenue
-      }));
-
-      const topProducts: TopProductData[] = dbProducts.slice(0, 5).map((p: any) => ({
-        id: p.id?.toString(),
+    dbProducts.forEach((p: any) => {
+      productSalesMap[String(p.id)] = {
         name: p.name || 'Unnamed Product',
         category: p.categories?.name || 'General',
-        sales: Math.floor(Math.random() * 30) + 5,
-        revenue: Number(p.price || 0) * (Math.floor(Math.random() * 20) + 2),
+        sales: 0,
+        revenue: 0,
         stock: Number(p.stock || 0)
-      }));
-
-      const realOrdersCount = filteredOrders.length;
-      const realAOV = realOrdersCount > 0 ? Math.round(realTotalRevenue / realOrdersCount) : 0;
-
-      return {
-        timeline,
-        categories: categories.length > 0 ? categories : [
-          { name: 'Electronics', value: 15000, count: 12, percentage: 60 },
-          { name: 'Gadgets', value: 10000, count: 8, percentage: 40 }
-        ],
-        orderStatuses: orderStatuses.length > 0 ? orderStatuses : [
-          { status: 'Completed', count: 10, revenue: 5000 }
-        ],
-        topProducts,
-        metrics: {
-          totalRevenue: realTotalRevenue,
-          revenueGrowth: '+14.2%',
-          totalOrders: realOrdersCount,
-          ordersGrowth: '+8.5%',
-          avgOrderValue: realAOV,
-          aovGrowth: '+3.1%',
-          activeProductsCount: dbProducts.length,
-          totalUsersCount: dbUsers.length,
-          conversionRate: '2.85%'
-        }
       };
-    }
-  }, [useDemoData, daysLimit, dbOrders, dbProducts, dbUsers]);
+    });
+
+    dbOrders.forEach((o: any) => {
+      (o.order_items || []).forEach((item: any) => {
+        const pid = String(item.product_id || item.products?.id || '');
+        if (pid && productSalesMap[pid]) {
+          productSalesMap[pid].sales += Number(item.quantity || 1);
+          productSalesMap[pid].revenue += Number(item.price || 0) * Number(item.quantity || 1);
+        } else if (item.products?.name) {
+          const fallbackKey = item.products.name;
+          if (!productSalesMap[fallbackKey]) {
+            productSalesMap[fallbackKey] = {
+              name: item.products.name,
+              category: item.products.categories?.name || 'General',
+              sales: 0,
+              revenue: 0,
+              stock: 0
+            };
+          }
+          productSalesMap[fallbackKey].sales += Number(item.quantity || 1);
+          productSalesMap[fallbackKey].revenue += Number(item.price || 0) * Number(item.quantity || 1);
+        }
+      });
+    });
+
+    const topProducts: TopProductData[] = Object.entries(productSalesMap)
+      .map(([id, data]) => ({ id, ...data }))
+      .sort((a, b) => b.revenue - a.revenue || b.sales - a.sales || b.stock - a.stock)
+      .slice(0, 5);
+
+    const realOrdersCount = filteredOrders.length;
+    const realAOV = realOrdersCount > 0 ? Math.round(realTotalRevenue / realOrdersCount) : 0;
+
+    return {
+      timeline,
+      categories,
+      orderStatuses,
+      topProducts,
+      metrics: {
+        totalRevenue: realTotalRevenue,
+        totalOrders: realOrdersCount,
+        avgOrderValue: realAOV,
+        activeProductsCount: dbProducts.length,
+        totalUsersCount: dbUsers.length,
+      }
+    };
+  }, [daysLimit, dbOrders, dbProducts, dbUsers]);
 
   // Export report functionality
   const handleExportCSV = () => {
@@ -551,48 +500,57 @@ export default function AdminReportsPage() {
             <p className="text-xs text-slate-500">Inventory valuation and sales breakdown</p>
           </div>
 
-          <div className="h-[230px] w-full flex items-center justify-center">
-            <ResponsiveContainer width="100%" height="100%">
-              <PieChart>
-                <Pie
-                  data={analytics.categories}
-                  cx="50%"
-                  cy="50%"
-                  innerRadius={60}
-                  outerRadius={85}
-                  paddingAngle={4}
-                  dataKey="value"
-                >
-                  {analytics.categories.map((entry, index) => (
-                    <Cell key={`cell-${index}`} fill={CATEGORY_COLORS[index % CATEGORY_COLORS.length]} />
-                  ))}
-                </Pie>
-                <Tooltip 
-                  contentStyle={{ backgroundColor: '#0f172a', borderRadius: '12px', border: 'none', color: '#fff' }}
-                  formatter={(value: any) => [formatCurrency(Number(value)), 'Valuation / Sales']}
-                />
-              </PieChart>
-            </ResponsiveContainer>
-          </div>
-
-          {/* Custom Category Legend List */}
-          <div className="space-y-2 pt-2 border-t border-slate-100 max-h-[120px] overflow-y-auto pr-1">
-            {analytics.categories.map((cat, idx) => (
-              <div key={cat.name} className="flex items-center justify-between text-xs font-semibold">
-                <div className="flex items-center space-x-2 truncate">
-                  <span 
-                    className="w-2.5 h-2.5 rounded-full shrink-0" 
-                    style={{ backgroundColor: CATEGORY_COLORS[idx % CATEGORY_COLORS.length] }} 
-                  />
-                  <span className="text-slate-700 truncate">{cat.name}</span>
-                </div>
-                <div className="flex items-center space-x-2 shrink-0">
-                  <span className="text-slate-900 font-extrabold">{cat.percentage}%</span>
-                  <span className="text-slate-400 font-normal">({cat.count} items)</span>
-                </div>
+          {analytics.categories.length > 0 ? (
+            <>
+              <div className="h-[230px] w-full flex items-center justify-center">
+                <ResponsiveContainer width="100%" height="100%">
+                  <PieChart>
+                    <Pie
+                      data={analytics.categories}
+                      cx="50%"
+                      cy="50%"
+                      innerRadius={60}
+                      outerRadius={85}
+                      paddingAngle={4}
+                      dataKey="value"
+                    >
+                      {analytics.categories.map((entry, index) => (
+                        <Cell key={`cell-${index}`} fill={CATEGORY_COLORS[index % CATEGORY_COLORS.length]} />
+                      ))}
+                    </Pie>
+                    <Tooltip 
+                      contentStyle={{ backgroundColor: '#0f172a', borderRadius: '12px', border: 'none', color: '#fff' }}
+                      formatter={(value: any) => [formatCurrency(Number(value)), 'Valuation / Sales']}
+                    />
+                  </PieChart>
+                </ResponsiveContainer>
               </div>
-            ))}
-          </div>
+
+              {/* Custom Category Legend List */}
+              <div className="space-y-2 pt-2 border-t border-slate-100 max-h-[120px] overflow-y-auto pr-1">
+                {analytics.categories.map((cat, idx) => (
+                  <div key={cat.name} className="flex items-center justify-between text-xs font-semibold">
+                    <div className="flex items-center space-x-2 truncate">
+                      <span 
+                        className="w-2.5 h-2.5 rounded-full shrink-0" 
+                        style={{ backgroundColor: CATEGORY_COLORS[idx % CATEGORY_COLORS.length] }} 
+                      />
+                      <span className="text-slate-700 truncate">{cat.name}</span>
+                    </div>
+                    <div className="flex items-center space-x-2 shrink-0">
+                      <span className="text-slate-900 font-extrabold">{cat.percentage}%</span>
+                      <span className="text-slate-400 font-normal">({cat.count} items)</span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </>
+          ) : (
+            <div className="h-[250px] flex flex-col items-center justify-center text-center p-6 text-slate-400">
+              <Package size={32} className="mb-2 opacity-50 text-slate-300" />
+              <p className="text-xs font-medium">No catalog categories found in database.</p>
+            </div>
+          )}
         </div>
 
       </div>
@@ -612,32 +570,39 @@ export default function AdminReportsPage() {
             </span>
           </div>
 
-          <div className="h-[260px] w-full">
-            <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={analytics.orderStatuses} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" vertical={false} />
-                <XAxis dataKey="status" tick={{ fontSize: 11, fill: '#64748b' }} axisLine={false} tickLine={false} />
-                <YAxis tick={{ fontSize: 11, fill: '#64748b' }} axisLine={false} tickLine={false} />
-                <Tooltip 
-                  contentStyle={{ backgroundColor: '#0f172a', borderRadius: '12px', border: 'none', color: '#fff' }}
-                  formatter={(val: any, name: any, item: any) => [
-                    `${val} orders (${formatCurrency(item.payload.revenue)})`,
-                    'Count'
-                  ]}
-                />
-                <Bar dataKey="count" radius={[8, 8, 0, 0]}>
-                  {analytics.orderStatuses.map((entry, index) => {
-                    let fill = CHART_COLORS.primary;
-                    if (entry.status === 'Delivered') fill = CHART_COLORS.emerald;
-                    else if (entry.status === 'Processing') fill = CHART_COLORS.secondary;
-                    else if (entry.status === 'Shipped') fill = CHART_COLORS.purple;
-                    else if (entry.status === 'Cancelled') fill = CHART_COLORS.rose;
-                    return <Cell key={`bar-${index}`} fill={fill} />;
-                  })}
-                </Bar>
-              </BarChart>
-            </ResponsiveContainer>
-          </div>
+          {analytics.orderStatuses.length > 0 ? (
+            <div className="h-[260px] w-full">
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart data={analytics.orderStatuses} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" vertical={false} />
+                  <XAxis dataKey="status" tick={{ fontSize: 11, fill: '#64748b' }} axisLine={false} tickLine={false} />
+                  <YAxis tick={{ fontSize: 11, fill: '#64748b' }} axisLine={false} tickLine={false} />
+                  <Tooltip 
+                    contentStyle={{ backgroundColor: '#0f172a', borderRadius: '12px', border: 'none', color: '#fff' }}
+                    formatter={(val: any, name: any, item: any) => [
+                      `${val} orders (${formatCurrency(item.payload.revenue)})`,
+                      'Count'
+                    ]}
+                  />
+                  <Bar dataKey="count" radius={[8, 8, 0, 0]}>
+                    {analytics.orderStatuses.map((entry, index) => {
+                      let fill = CHART_COLORS.primary;
+                      if (entry.status === 'Delivered') fill = CHART_COLORS.emerald;
+                      else if (entry.status === 'Processing') fill = CHART_COLORS.secondary;
+                      else if (entry.status === 'Shipped') fill = CHART_COLORS.purple;
+                      else if (entry.status === 'Cancelled') fill = CHART_COLORS.rose;
+                      return <Cell key={`bar-${index}`} fill={fill} />;
+                    })}
+                  </Bar>
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
+          ) : (
+            <div className="h-[260px] flex flex-col items-center justify-center text-center p-6 text-slate-400">
+              <ShoppingBag size={32} className="mb-2 opacity-50 text-slate-300" />
+              <p className="text-xs font-medium">No customer orders recorded in database yet.</p>
+            </div>
+          )}
         </div>
 
         {/* Customer Growth & Registrations Line Chart */}
@@ -645,10 +610,10 @@ export default function AdminReportsPage() {
           <div className="flex items-center justify-between border-b border-slate-100 pb-4">
             <div>
               <h2 className="text-lg font-black text-slate-900 tracking-tight">User Acquisition & Growth</h2>
-              <p className="text-xs text-slate-500">Customer signups trajectory over time</p>
+              <p className="text-xs text-slate-500">Customer checkout frequency over time</p>
             </div>
             <span className="text-xs font-bold text-emerald-600 bg-emerald-50 px-3 py-1 rounded-full flex items-center">
-              <TrendingUp size={12} className="mr-1" /> +24% growth
+              <Users size={12} className="mr-1" /> {dbUsers.length} total users
             </span>
           </div>
 
@@ -662,7 +627,7 @@ export default function AdminReportsPage() {
                 <Line 
                   type="monotone" 
                   dataKey="customers" 
-                  name="New Registrations"
+                  name="Active Customers"
                   stroke={CHART_COLORS.emerald} 
                   strokeWidth={3}
                   dot={{ r: 3, fill: CHART_COLORS.emerald }}
@@ -683,7 +648,7 @@ export default function AdminReportsPage() {
           <div className="flex items-center justify-between border-b border-slate-100 pb-4">
             <div>
               <h2 className="text-lg font-black text-slate-900 tracking-tight">Top Performing Products</h2>
-              <p className="text-xs text-slate-500">Best-selling inventory based on total revenue generated</p>
+              <p className="text-xs text-slate-500">Inventory performance based on sales orders and available stock</p>
             </div>
           </div>
 
@@ -699,24 +664,32 @@ export default function AdminReportsPage() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100">
-                {analytics.topProducts.map((prod) => (
-                  <tr key={prod.id} className="hover:bg-slate-50/80 transition">
-                    <td className="py-3.5 px-2 font-bold text-slate-900 flex items-center space-x-2">
-                      <span className="w-2 h-2 rounded-full bg-orange-500 shrink-0" />
-                      <span className="truncate max-w-[220px]">{prod.name}</span>
-                    </td>
-                    <td className="py-3.5 px-2 text-slate-600 font-medium">{prod.category}</td>
-                    <td className="py-3.5 px-2 text-center font-bold text-slate-800">{prod.sales}</td>
-                    <td className="py-3.5 px-2 text-right font-black text-slate-900">{formatCurrency(prod.revenue)}</td>
-                    <td className="py-3.5 px-2 text-center">
-                      <span className={`px-2.5 py-1 rounded-full text-[11px] font-bold ${
-                        prod.stock < 10 ? 'bg-red-50 text-red-600' : 'bg-emerald-50 text-emerald-600'
-                      }`}>
-                        {prod.stock} in stock
-                      </span>
+                {analytics.topProducts.length > 0 ? (
+                  analytics.topProducts.map((prod) => (
+                    <tr key={prod.id} className="hover:bg-slate-50/80 transition">
+                      <td className="py-3.5 px-2 font-bold text-slate-900 flex items-center space-x-2">
+                        <span className="w-2 h-2 rounded-full bg-orange-500 shrink-0" />
+                        <span className="truncate max-w-[220px]">{prod.name}</span>
+                      </td>
+                      <td className="py-3.5 px-2 text-slate-600 font-medium">{prod.category}</td>
+                      <td className="py-3.5 px-2 text-center font-bold text-slate-800">{prod.sales}</td>
+                      <td className="py-3.5 px-2 text-right font-black text-slate-900">{formatCurrency(prod.revenue)}</td>
+                      <td className="py-3.5 px-2 text-center">
+                        <span className={`px-2.5 py-1 rounded-full text-[11px] font-bold ${
+                          prod.stock < 10 ? 'bg-red-50 text-red-600' : 'bg-emerald-50 text-emerald-600'
+                        }`}>
+                          {prod.stock} in stock
+                        </span>
+                      </td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td colSpan={5} className="py-8 text-center text-slate-400 font-medium">
+                      No products recorded in the database catalog yet.
                     </td>
                   </tr>
-                ))}
+                )}
               </tbody>
             </table>
           </div>
@@ -731,22 +704,36 @@ export default function AdminReportsPage() {
             
             <div className="space-y-3">
               <div className="bg-blue-600 border border-blue-500 p-4 rounded-2xl space-y-1 text-white shadow-sm">
-                <p className="text-[11px] text-blue-100 font-bold uppercase tracking-wider">Top Revenue Segment</p>
-                <p className="text-sm font-extrabold text-white">Smartphones & Mobile</p>
-                <p className="text-xs text-blue-50 font-medium">Generates 38% of store revenue with average unit margin of 24%.</p>
+                <p className="text-[11px] text-blue-100 font-bold uppercase tracking-wider">Top Product Segment</p>
+                <p className="text-sm font-extrabold text-white">
+                  {analytics.categories.length > 0 ? analytics.categories[0].name : 'Catalog Pending'}
+                </p>
+                <p className="text-xs text-blue-50 font-medium">
+                  {analytics.categories.length > 0
+                    ? `Accounts for ${analytics.categories[0].percentage}% of catalog valuation (${analytics.categories[0].count} items).`
+                    : 'Add products and categories to see valuation breakdown.'}
+                </p>
               </div>
 
               <div className="bg-blue-600 border border-blue-500 p-4 rounded-2xl space-y-1 text-white shadow-sm">
                 <p className="text-[11px] text-blue-100 font-bold uppercase tracking-wider">Fulfillment Health</p>
-                <p className="text-sm font-extrabold text-white">92.4% Delivery Completion</p>
-                <p className="text-xs text-blue-50 font-medium">Average fulfillment velocity: 1.8 days from order creation.</p>
+                <p className="text-sm font-extrabold text-white">
+                  {dbOrders.length > 0 
+                    ? `${Math.round((dbOrders.filter((o: any) => ['delivered', 'completed', 'paid'].includes((o.status || '').toLowerCase())).length / dbOrders.length) * 100)}% Fulfilled / Paid`
+                    : 'No Orders Yet'}
+                </p>
+                <p className="text-xs text-blue-50 font-medium">
+                  {dbOrders.length > 0
+                    ? `${dbOrders.filter((o: any) => ['delivered', 'completed', 'paid'].includes((o.status || '').toLowerCase())).length} of ${dbOrders.length} total orders fulfilled or paid.`
+                    : 'Fulfillment statistics update automatically as customer orders are placed.'}
+                </p>
               </div>
             </div>
           </div>
 
           <div className="pt-4 border-t border-blue-100 flex items-center justify-between text-xs font-semibold text-blue-600">
             <span className="flex items-center">
-              <ShieldCheck size={15} className="mr-1 text-blue-600" /> System Metrics Active
+              <ShieldCheck size={15} className="mr-1 text-blue-600" /> Live Database Metrics
             </span>
           </div>
         </div>

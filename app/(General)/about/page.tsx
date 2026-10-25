@@ -157,7 +157,7 @@ export default function AboutPage() {
             <div className="flex flex-wrap gap-4 pt-2 justify-center md:justify-start text-xs font-semibold text-white">
               <span className="flex items-center gap-1.5"><MapPin className="w-4 h-4" /> Ghana</span>
               <span className="flex items-center gap-1.5"><Phone className="w-4 h-4" /> 054 344 2518</span>
-              <span className="flex items-center gap-1.5"><Mail className="w-4 h-4" /> support@teqvault.com</span>
+              <span className="flex items-center gap-1.5"><Mail className="w-4 h-4" /> support@teqvault.app</span>
             </div>
           </div>
 

@@ -115,16 +115,18 @@ export default function AdminDashboard() {
       // 3. Fetch Recent Users (limit to 5)
       const { data: dbUsers } = await supabase
         .from('users')
-        .select('id, name, email')
+        .select('*')
         .limit(5);
 
-      const ADMIN_EMAILS = ['manikeeric@gmail.com'];
-      const mappedUsers: RecentUser[] = dbUsers?.map((row: any) => ({
-        id: row.id,
-        fullName: row.name || "Anonymous User",
-        email: row.email || "No Email",
-        role: row.email && ADMIN_EMAILS.includes(row.email.toLowerCase()) ? 'Admin' : 'User'
-      })) || [];
+      const mappedUsers: RecentUser[] = dbUsers?.map((row: any) => {
+        const rawRole = row.role || row.user_role || (row.email?.toLowerCase() === 'manikeeric@gmail.com' ? 'admin' : 'user');
+        return {
+          id: row.id,
+          fullName: row.name || row.full_name || "Anonymous User",
+          email: row.email || "No Email",
+          role: String(rawRole).toLowerCase() === 'admin' ? 'Admin' : 'User'
+        };
+      }) || [];
 
       setRecentUsers(mappedUsers);
 

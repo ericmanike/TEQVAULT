@@ -3,7 +3,7 @@ import { ShieldCheck, Lock, Eye, Database, Server, UserCheck, Mail, ArrowRight, 
 import Link from 'next/link';
 import { Metadata } from 'next';
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.teqvault.com';
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://teqvault.app';
 
 export const metadata: Metadata = {
   title: 'Privacy Policy | TEQVAULT',
@@ -124,7 +124,7 @@ export default function PrivacyPolicyPage() {
           <div className="p-6 bg-orange-500 text-white rounded-2xl space-y-2">
             <h3 className="font-bold text-base ">Support Desk</h3>
             <p className="text-xs ">TEQVAULT | Ghana</p>
-            <p className="text-xs ">Email: support@teqvault.com | Phone: 054 344 2518</p>
+            <p className="text-xs ">Email: support@teqvault.app | Phone: 054 344 2518</p>
           </div>
 
         </div>

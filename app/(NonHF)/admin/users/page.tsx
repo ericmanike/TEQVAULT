@@ -33,19 +33,21 @@ export default function AdminUsersPage() {
       setLoading(true);
       const { data, error } = await supabase
         .from('users')
-        .select('id, name, email, phone')
+        .select('*')
         .order('name');
 
       if (error) throw error;
 
-      const ADMIN_EMAILS = ['manikeeric@gmail.com'];
-      const mappedUsers: UserItem[] = data?.map((row: any) => ({
-        id: row.id,
-        fullName: row.name || "Anonymous User",
-        email: row.email || "No Email",
-        phone: row.phone || "N/A",
-        role: row.email && ADMIN_EMAILS.includes(row.email.toLowerCase()) ? 'Admin' : 'User'
-      })) || [];
+      const mappedUsers: UserItem[] = data?.map((row: any) => {
+        const rawRole = row.role || row.user_role || (row.email?.toLowerCase() === 'manikeeric@gmail.com' ? 'admin' : 'user');
+        return {
+          id: row.id,
+          fullName: row.name || row.full_name || "Anonymous User",
+          email: row.email || "No Email",
+          phone: row.phone || row.phone_number || "N/A",
+          role: String(rawRole).toLowerCase() === 'admin' ? 'Admin' : 'User'
+        };
+      }) || [];
 
       setUsers(mappedUsers);
     } catch (err) {

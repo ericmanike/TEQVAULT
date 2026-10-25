@@ -3,7 +3,7 @@ import { RefreshCw, CheckCircle, Clock, AlertTriangle, ShieldCheck, HelpCircle, 
 import Link from 'next/link';
 import { Metadata } from 'next';
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.teqvault.com';
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://teqvault.app';
 
 export const metadata: Metadata = {
   title: 'Return & Refund Policy | TEQVAULT',
@@ -122,7 +122,7 @@ export default function RefundPolicyPage() {
           {/* Contact Box */}
           <div className="p-6 bg-orange-500 text-white rounded-2xl space-y-2">
             <h3 className="font-bold text-base "> For Returns</h3>
-            <p className="text-xs ">Call Support: 054 344 2518 | Email: support@teqvault.com</p>
+            <p className="text-xs ">Call Support: 054 344 2518 | Email: support@teqvault.app</p>
 
           </div>
 

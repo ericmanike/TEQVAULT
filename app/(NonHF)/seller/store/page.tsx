@@ -224,7 +224,7 @@ export default function StoreProfilePage() {
                 value={formik.values.storeEmail}
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
-                placeholder="store@teqvault.com"
+                placeholder="store@teqvault.app"
                 className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-[#1e293b] focus:ring-1 focus:ring-[#1e293b] outline-none transition text-sm font-semibold text-gray-900"
               />
               {formik.touched.storeEmail && formik.errors.storeEmail && (

@@ -45,7 +45,6 @@ interface Order {
   phone_number?: string;
   users: UserProfile | null;
   order_items: OrderItem[];
-  isMock?: boolean;
 }
 
 export default function AdminOrdersPage() {
@@ -109,7 +108,7 @@ export default function AdminOrdersPage() {
           allOrdersList = ordersRes.data.map((row: any) => {
             const userObj = row.users || (row.user_id ? userMap[row.user_id] : null);
             const userName = userObj?.name || userObj?.full_name || (userObj?.email ? userObj.email.split('@')[0] : (row.user_id ? `Customer (${String(row.user_id).slice(0, 8)})` : 'Guest Customer'));
-            const userEmail = userObj?.email || (row.user_id ? `user-${String(row.user_id).slice(0, 8)}@teqvault.com` : 'Guest Checkout');
+            const userEmail = userObj?.email || (row.user_id ? `user-${String(row.user_id).slice(0, 8)}@teqvault.app` : 'Guest Checkout');
             const userPhone = row.phone_number || userObj?.phone || userObj?.phone_number || 'N/A';
 
             return {
@@ -167,42 +166,26 @@ export default function AdminOrdersPage() {
     if (!orderToUpdate) return;
 
     try {
-      if (orderToUpdate.isMock) {
-        // Mock order local state update
-        const updated = orders.map(o => {
-          if (o.id === orderId) {
-            const updatedOrder = { ...o, status: newStatus };
-            if (selectedOrder && selectedOrder.id === orderId) {
-              setSelectedOrder(updatedOrder);
-            }
-            return updatedOrder;
-          }
-          return o;
-        });
-        setOrders(updated);
-        showToast(`Order status updated to "${newStatus}" (Local Mock)`, 'success');
-      } else {
-        // Supabase DB update
-        const { error } = await supabase
-          .from('orders')
-          .update({ status: newStatus })
-          .eq('id', orderId);
+      // Supabase DB update
+      const { error } = await supabase
+        .from('orders')
+        .update({ status: newStatus })
+        .eq('id', orderId);
 
-        if (error) throw error;
+      if (error) throw error;
 
-        const updated = orders.map(o => {
-          if (o.id === orderId) {
-            const updatedOrder = { ...o, status: newStatus };
-            if (selectedOrder && selectedOrder.id === orderId) {
-              setSelectedOrder(updatedOrder);
-            }
-            return updatedOrder;
+      const updated = orders.map(o => {
+        if (o.id === orderId) {
+          const updatedOrder = { ...o, status: newStatus };
+          if (selectedOrder && selectedOrder.id === orderId) {
+            setSelectedOrder(updatedOrder);
           }
-          return o;
-        });
-        setOrders(updated);
-        showToast(`Order status successfully updated to "${newStatus}"!`, 'success');
-      }
+          return updatedOrder;
+        }
+        return o;
+      });
+      setOrders(updated);
+      showToast(`Order status successfully updated to "${newStatus}"!`, 'success');
     } catch (err: any) {
       console.error("Failed to update status:", err);
       showToast(err.message || "Failed to update order status.", "error");
@@ -524,9 +507,9 @@ export default function AdminOrdersPage() {
                       <span className="text-slate-800 font-semibold text-sm block mt-0.5">{new Date(selectedOrder.created_at).toLocaleString()}</span>
                     </div>
                     <div>
-                      <span className="block font-bold text-slate-500 uppercase tracking-wider text-[9px]">Data Origin</span>
-                      <span className={`inline-block px-2 py-0.5 rounded font-bold mt-1 text-[9px] uppercase tracking-wider border ${selectedOrder.isMock ? 'bg-amber-50 border-amber-100 text-amber-700' : 'bg-emerald-50 border-emerald-100 text-emerald-700'}`}>
-                        {selectedOrder.isMock ? 'High-Fidelity Mock' : 'Live Database'}
+                      <span className="block font-bold text-slate-500 uppercase tracking-wider text-[9px]">Fulfillment Status</span>
+                      <span className="inline-block px-2.5 py-0.5 rounded-full font-bold mt-1 text-[10px] uppercase tracking-wider border bg-emerald-50 border-emerald-200 text-emerald-700">
+                        {selectedOrder.status || 'Active'}
                       </span>
                     </div>
                   </div>

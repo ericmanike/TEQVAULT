@@ -677,11 +677,11 @@ export default function LaunchAdPage() {
               Voiceover script designed for 30s TikTok, Reels & WhatsApp Status commercials.
             </p>
             <div className="p-3 rounded-xl bg-black/60 border border-slate-800 text-[11px] font-mono text-slate-300 space-y-1.5 leading-relaxed">
-              <p>&ldquo;Are you tired of fake gadgets and crazy prices? TEQVAULT is finally here! Get 100% genuine iPhones, laptops, and networking gear with full warranty. Use Pay Small Small or grab Falaa Deals today. Visit teqvault.com and use code LAUNCH10!&rdquo;</p>
+              <p>&ldquo;Are you tired of fake gadgets and crazy prices? TEQVAULT is finally here! Get 100% genuine iPhones, laptops, and networking gear with full warranty. Use Pay Small Small or grab Falaa Deals today. Visit teqvault.app and use code LAUNCH10!&rdquo;</p>
             </div>
             <button
               onClick={() => {
-                navigator.clipboard.writeText("Are you tired of fake gadgets and crazy prices? TEQVAULT is finally here! Get 100% genuine iPhones, laptops, and networking gear with full warranty. Use Pay Small Small or grab Falaa Deals today. Visit teqvault.com and use code LAUNCH10!");
+                navigator.clipboard.writeText("Are you tired of fake gadgets and crazy prices? TEQVAULT is finally here! Get 100% genuine iPhones, laptops, and networking gear with full warranty. Use Pay Small Small or grab Falaa Deals today. Visit teqvault.app and use code LAUNCH10!");
                 toast.success("Voiceover script copied!");
               }}
               className="w-full py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-xs font-semibold text-white transition-colors cursor-pointer"

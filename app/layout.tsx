@@ -27,7 +27,7 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "https://www.teqvault.com"),
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "https://teqvault.app"),
   title: "TEQVAULT - Your Trusted Plug for Quality Gadgets",
   description: "Buy quality and trusted gadgets on TEQVAULT - your trusted platform for all phones, laptop and accessories - gadgets.",
   twitter: {
@@ -39,7 +39,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "TEQVAULT - Your Trusted Plug for Quality Gadgets",
     description: "Buy quality and trusted gadgets on TEQVAULT - your trusted platform for all phones, laptop and accessories - gadgets.",
-    url: "https://www.teqvault.com",
+    url: "https://teqvault.app",
     siteName: "TEQVAULT",
     images: [
       {

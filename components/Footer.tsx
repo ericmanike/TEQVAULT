@@ -36,7 +36,7 @@ export default function Footer() {
                             <a href="#" className="text-orange-500 hover:text-white transition-colors"><Twitter className="h-6 w-6" /></a>
                             <a href="#" className="text-orange-500 hover:text-white transition-colors"><Instagram className="h-6 w-6" /></a>
                             <a href="#" className="text-orange-500 hover:text-white transition-colors"><Linkedin className="h-6 w-6" /></a>
-                            <a href="mailto:support@teqvault.com" className="text-orange-500 hover:text-white transition-colors"><Mail className="h-6 w-6" /></a>
+                            <a href="mailto:support@teqvault.app" className="text-orange-500 hover:text-white transition-colors"><Mail className="h-6 w-6" /></a>
                         </div>
                     </div>
 
@@ -78,7 +78,7 @@ export default function Footer() {
                             </li>
                             <li className="flex items-center gap-3">
                                 <Mail className="h-5 w-5 text-orange-500 shrink-0" />
-                                <span>support@teqvault.com</span>
+                                <span>support@teqvault.app</span>
                             </li>
                         </ul>
                     </div>

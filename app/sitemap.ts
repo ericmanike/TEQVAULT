@@ -4,7 +4,7 @@ import { fetchAllProducts } from '@/lib/products'
 export const revalidate = 3600
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.teqvault.com'
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://teqvault.app'
 
   // Fetch dynamic products from database
   let productRoutes: MetadataRoute.Sitemap = []

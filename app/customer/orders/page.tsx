@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { ShoppingBag, CircleStar, Calendar, Clock, Download, RefreshCw, MapPin, CheckCircle, Truck, AlertCircle, Phone } from 'lucide-react';
+import { ShoppingBag, CircleStar, Calendar, Clock, Download, RefreshCw, CheckCircle, Truck, AlertCircle } from 'lucide-react';
 import Link from 'next/link';
 import { supabase } from '@/lib/supabase';
 import { useAuth } from '@/components/AuthContext';
@@ -74,8 +74,6 @@ export default function OrdersPage() {
           created_at: row.created_at || new Date().toISOString(),
           total: Number(row.total) || 0,
           status: row.status || 'Paid',
-          delivery_address: row.delivery_address || row.delivery_addreess || undefined,
-          user_phone: row.phone_number || undefined,
           user_name: user?.user_metadata?.full_name || user?.email?.split('@')[0],
           user_email: user?.email,
           items: (row.order_items || []).map((item: any) => ({
@@ -181,18 +179,6 @@ export default function OrdersPage() {
                             <Calendar size={12} />
                             <span>{new Date(order.created_at).toLocaleDateString(undefined, { dateStyle: 'medium' })}</span>
                           </div>
-                          {order.delivery_address && (
-                            <div className="flex items-center gap-1.5 text-slate-600 font-medium">
-                              <MapPin size={12} className="text-orange-500 shrink-0" />
-                              <span className="truncate max-w-[200px] md:max-w-xs">{order.delivery_address}</span>
-                            </div>
-                          )}
-                          {order.user_phone && (
-                            <div className="flex items-center gap-1.5 text-slate-600 font-medium">
-                              <Phone size={12} className="text-orange-500 shrink-0" />
-                              <span>{order.user_phone}</span>
-                            </div>
-                          )}
                         </div>
                       </div>
                     </div>

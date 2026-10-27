@@ -58,7 +58,7 @@ export const FirstVisitPopup: React.FC = () => {
                   Welcome to<br />TEQVAULT!
                 </h2>
                 <p className="text-orange-100 text-sm mt-1 font-medium">
-                  Find the best tech for your home or office
+                  Find the best tech for your home, office or business
                 </p>
               </div>
 
@@ -70,7 +70,7 @@ export const FirstVisitPopup: React.FC = () => {
               {/* Perks */}
               <div className="px-6 py-5 space-y-4">
                 <div className="flex items-start gap-3">
-                  <div className="w-9 h-9 rounded-full bg-orange-50 flex items-center justify-center shrink-0">
+                  <div className="w-9 h-9 rounded-full flex items-center justify-center shrink-0">
                     <Zap size={18} className="text-orange-500" />
                   </div>
                   <div>
@@ -80,7 +80,7 @@ export const FirstVisitPopup: React.FC = () => {
                 </div>
 
                 <div className="flex items-start gap-3">
-                  <div className="w-9 h-9 rounded-full bg-orange-50 flex items-center justify-center shrink-0">
+                  <div className="w-9 h-9 rounded-full  flex items-center justify-center shrink-0">
                     <Truck size={18} className="text-orange-500" />
                   </div>
                   <div>
@@ -90,7 +90,7 @@ export const FirstVisitPopup: React.FC = () => {
                 </div>
 
                 <div className="flex items-start gap-3">
-                  <div className="w-9 h-9 rounded-full bg-orange-50 flex items-center justify-center shrink-0">
+                  <div className="w-9 h-9 rounded-full flex items-center justify-center shrink-0">
                     <ShieldCheck size={18} className="text-orange-500" />
                   </div>
                   <div>

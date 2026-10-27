@@ -220,11 +220,11 @@ export function CategoryProductCard({
         )}
       </div>
 
-      {/* Dark Bottom Gradient Overlay (matching reference screenshot) */}
-      <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 via-40% to-transparent pointer-events-none" />
+      {/* Soft Bottom Gradient Overlay for text contrast without deep darkening */}
+      <div className="absolute inset-x-0 bottom-0 h-3/5 bg-gradient-to-t from-black/50 via-black/20 via-30% to-transparent pointer-events-none" />
 
       {/* Subtle hover brightness overlay */}
-      <div className="absolute inset-0 bg-black/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
+      <div className="absolute inset-0 bg-black/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
 
       {/* Bottom Content: Title & Price */}
       <div className="absolute inset-x-0 bottom-0 z-10 p-4 sm:p-5 md:p-6 flex flex-col justify-end pointer-events-none">

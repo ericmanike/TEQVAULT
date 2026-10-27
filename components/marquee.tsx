@@ -2,8 +2,8 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import TextType from "./ui/TextType";
-import { ArrowUpRight, Cable, BanknoteArrowUp } from "lucide-react";
+
+import { ArrowUpRight, BanknoteArrowUp } from "lucide-react";
 import FeedbackModal from "./FeedbackModal";
 
 const Marquee = () => {
@@ -14,29 +14,8 @@ const Marquee = () => {
 
   return (
     <>
-      <div className="flex flex-row flex-nowrap px-2.5 sm:px-6 md:px-8 gap-2 sm:gap-6 justify-between items-center bg-gray-800 text-white py-2 sm:py-2.5 md:py-3 min-h-[60px] sm:min-h-[64px] md:min-h-[70px] overflow-hidden border-b border-yellow-400">
-        <div className="flex flex-nowrap items-center gap-1.5 sm:gap-2.5 shrink min-w-0 overflow-hidden min-h-[40px] sm:min-h-[44px]">
-          <Cable className="w-4.5 h-4.5 sm:w-5 sm:h-5 md:w-6.5 md:h-6.5 text-yellow-400 shrink-0" />  
-          <div className="flex items-center min-h-[38px] sm:min-h-[40px]">
-            <TextType 
-              text={[
-                "Shop The Best Tech Here",    
-                "Latest Tech, Smartphones & Accessories",
-                "Call or WhatsApp 0543442518 to place an order",
-                "Unbeatable Quality & Prices"
-              ]}
-              typingSpeed={75}
-              pauseDuration={1500}
-              showCursor
-              cursorCharacter="|"
-              deletingSpeed={50}
-              className="text-[13px] sm:text-[14px] md:text-[16px] font-semibold leading-snug line-clamp-2"
-              cursorBlinkDuration={0.5}
-            />
-          </div>
-        </div>
-
-        <div className="flex items-center gap-2.5 sm:gap-5 md:gap-7 shrink-0">
+      <div className="flex flex-row flex-nowrap w-full px-2.5 sm:px-6 md:px-8 justify-around items-center bg-gray-800 text-white py-2 sm:py-2.5 md:py-3 min-h-[48px] sm:min-h-[52px] md:min-h-[56px] overflow-hidden border-b border-yellow-400">
+        <div className="flex items-center justify-around w-full">
           <button
             type="button"
             onClick={() => setIsFeedbackOpen(true)}

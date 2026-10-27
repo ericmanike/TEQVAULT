@@ -105,7 +105,7 @@ const Navbar = () => {
                       setIsSearchOpen(true);
                     }}
                     onFocus={() => setIsSearchOpen(true)}
-                    placeholder="Search in TEQVAULT ..."
+                    placeholder="I am looking for.."
                     className="no-border w-full h-[48px] md:h-12 pl-5 md:pl-6 pr-11 md:pr-12 bg-transparent outline-none placeholder:text-gray-400 text-slate-800 text-[15px] md:text-base rounded-full focus:outline-none focus:ring-0"
                   />
                   <div className="absolute right-3.5 md:right-4 flex items-center">

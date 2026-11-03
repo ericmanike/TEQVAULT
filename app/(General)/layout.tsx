@@ -6,7 +6,7 @@ import { metadata } from '../layout'
 
 
 export const pageMetadata: Metadata = {
-  title: 'TEQVAULT - Your #1 Plug For Reliable Computers, Smart Phones & Accesories ',
+  title: 'TEQVAULT - Your #1 Shop For Reliable Computers, Smart Phones & Accesories ',
   description: 'Buy quality and reliable computers, smart phones and accessories on TEQVAULT - your #1 plug for all your tech needs.',
   ...metadata,
 }

@@ -4,7 +4,7 @@ import { HelpCircle } from "lucide-react";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Login/Signup - TEQVAULT",
+  title: "Authencate - TEQVAULT",
   description: "Sign in or create a free account with TEQVAULT. Start your mobile data agent business or buy bundles directly.",
 };
 

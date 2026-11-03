@@ -28,17 +28,17 @@ export const viewport: Viewport = {
 
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "https://teqvault.app"),
-  title: "TEQVAULT - Your Trusted Plug for Quality Gadgets",
-  description: "Buy quality and trusted gadgets on TEQVAULT - your trusted platform for all phones, laptop and accessories - gadgets.",
+  title: "TEQVAULT - Your #1 Shop For Reliable Computers,Smartphones, Systems and Accessories ",
+  description: "Buy  Reliable Computers On TEQVAULT - your trusted platform for all , smartphones, laptops and accessories.", 
   twitter: {
     card: "summary_large_image",
-    title: "TEQVAULT - Your Trusted Plug for Quality Gadgets",
-    description: "Buy quality and trusted gadgets on TEQVAULT - your trusted platform for all phones, laptops and accessories.",
+    title: "TEQVAULT - Your Trusted Plug for Quality Computers",
+    description: "Buy  Reliable Computers On TEQVAULT - your trusted platform for all , smartphones, laptops and accessories.",
     images: "https://res.cloudinary.com/dzj8q4qtf/image/upload/v1700000000/recyco-twitter-card_ojl5n9.png",
   },
   openGraph: {
-    title: "TEQVAULT - Your Trusted Plug for Quality Gadgets",
-    description: "Buy quality and trusted gadgets on TEQVAULT - your trusted platform for all phones, laptop and accessories - gadgets.",
+    title: "TEQVAULT - Your Trusted Plug for Quality Computers",
+    description: "Buy Reliable Computers On TEQVAULT - your trusted platform for all , smartphones, laptops and accessories..",
     url: "https://teqvault.app",
     siteName: "TEQVAULT",
     images: [

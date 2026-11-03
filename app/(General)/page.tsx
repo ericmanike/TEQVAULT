@@ -103,7 +103,6 @@ export default function Home() {
               { title: 'Accessories', url: '/cat_accessories.png', query: 'accessories' },
               { title: 'Printers & Scanners', url: '/cat_printers.png', query: 'printers-scanners' },
               { title: 'Network Devices', url: '/starlink.png', query: 'wifi-network-devices' },
-
             ].map((cat, idx) => (
               <Link
                 key={idx}
@@ -127,6 +126,25 @@ export default function Home() {
                 </span>
               </Link>
             ))}
+            <a
+              href="https://www.megagigs.net/buy"
+              target="_blank"
+              rel="noreferrer"
+              className="group flex flex-col gap-2 shrink-0 w-[110px] sm:w-[130px] md:w-[150px] select-none"
+            >
+              <div className="relative h-[80px] sm:h-[95px] md:h-[110px] rounded-xl sm:rounded-2xl overflow-hidden shadow-sm border border-slate-100 bg-slate-100 w-full">
+                <Image
+                  src="/mtn-router.png"
+                  alt="Data Bundle"
+                  fill
+                  sizes="(max-width: 640px) 110px, (max-width: 768px) 130px, 150px"
+                  className="object-cover transition-transform duration-300 group-hover:scale-105"
+                />
+              </div>
+              <span className="text-center text-xs sm:text-sm font-semibold text-slate-700 group-hover:text-orange-500 transition-colors">
+                Data Bundle
+              </span>
+            </a>
           </div>
 
             {/* View All Button */}

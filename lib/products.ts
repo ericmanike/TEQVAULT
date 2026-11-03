@@ -94,6 +94,38 @@ export async function getRelatedProducts(product: Product): Promise<Product[]> {
     ).slice(0, 4);
 }
 
+export async function fetchTrendingProducts(limit = 6): Promise<Product[]> {
+    try {
+        const [products, { data: items, error: itemsError }] = await Promise.all([
+            fetchAllProducts(),
+            supabase.from('order_items').select('product_id, quantity')
+        ]);
+
+        if (!products || products.length === 0) return [];
+
+        const orderCounts: Record<string, number> = {};
+        if (!itemsError && items) {
+            items.forEach((item: any) => {
+                const pid = String(item.product_id);
+                orderCounts[pid] = (orderCounts[pid] || 0) + Number(item.quantity || 1);
+            });
+        }
+
+        // Sort by order counts descending, fallback to ratingCount / rating
+        const sorted = [...products].sort((a, b) => {
+            const countA = orderCounts[String(a.id)] || 0;
+            const countB = orderCounts[String(b.id)] || 0;
+            if (countB !== countA) return countB - countA;
+            return (b.ratingCount || 0) - (a.ratingCount || 0);
+        });
+
+        return sorted.slice(0, limit);
+    } catch (err) {
+        console.error("Error fetching trending products:", err);
+        return [];
+    }
+}
+
 export function parseImageUrls(productImages: any): string[] {
     if (!productImages) return [];
     const items = Array.isArray(productImages) ? productImages : [productImages];

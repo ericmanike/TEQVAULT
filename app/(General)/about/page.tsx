@@ -2,33 +2,10 @@
 
 import React from 'react';
 import { motion } from 'framer-motion';
-import { ShieldCheck, Truck, Headphones, RefreshCw, Smartphone, Laptop, Wrench, Award, MapPin, Mail, Phone, Users, CheckCircle2 } from 'lucide-react';
+import { Award, MapPin, Mail, Phone, Users, CheckCircle2, GraduationCap, BriefcaseBusiness, ShoppingBag, ArrowUpRight } from 'lucide-react';
 import Link from 'next/link';
 
 export default function AboutPage() {
-  const businessActivities = [
-    {
-      icon: Smartphone,
-      title: 'Premium Consumer Electronics',
-      description: 'We stock authentic smartphones, tablets, laptops, gaming gear, and tech accessories from leading worldwide brands with full warranty coverage.'
-    },
-    {
-      icon: RefreshCw,
-      title: 'Gadget Trade-In & Buyback',
-      description: 'Customers can sell or trade in their gently-used devices for instant cash or store credit with transparent valuation and fast payment processing.'
-    },
-    {
-      icon: Wrench,
-      title: 'Professional IT & Device Repairs',
-      description: 'Certified technician repairs for laptops, smartphones, screen replacements, logic board diagnostics, software installations, and hardware upgrades.'
-    },
-    {
-      icon: ShieldCheck,
-      title: 'Flexible Pay Small Small Financing',
-      description: 'Empowering customers to acquire high-grade electronics with convenient weekly or monthly installment payment schedules tailored for all budgets.'
-    }
-  ];
-
   const coreValues = [
     {
       title: 'Authenticity Guarantee',
@@ -48,54 +25,66 @@ export default function AboutPage() {
     }
   ];
 
+  const teqvaultPlatforms = [
+    {
+      icon: ShoppingBag,
+      name: 'TEQVAULT Commerce',
+      description: 'Shop authentic smartphones, laptops, accessories, gaming gear, and other consumer electronics with trusted support, delivery, trade-ins, and flexible payment options.',
+      href: 'https://teqvault.app',
+      action: 'Shop now'
+    },
+    {
+      icon: GraduationCap,
+      name: 'TEQVAULT Academy',
+      description: 'Learn practical technology and digital skills through accessible courses, guided learning, and resources for students, professionals, and growing businesses.',
+      href: 'https://learn.teqvault.app',
+      action: 'Start learning'
+    },
+    {
+      icon: BriefcaseBusiness,
+      name: 'TEQVAULT Services',
+      description: 'Get professional device repairs, IT support, installations, upgrades, and technology solutions for individuals, teams, and organizations.',
+      href: 'https://service.teqvault.app',
+      action: 'Explore services'
+    }
+  ];
+
   return (
     <div className="min-h-screen bg-slate-50 py-12 px-4 pt-28 pb-20 mt-20 md:mt-12">
       <div className="max-w-6xl mx-auto space-y-16">
-        {/* Hero Section */}
-        <section className="text-center space-y-4 max-w-3xl mx-auto">
-          <motion.div
-            initial={{ opacity: 0, y: 15 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.4 }}
-          >
-            <span className="inline-block px-4 py-1.5 bg-orange-100 text-orange-600 rounded-full text-xs font-bold uppercase tracking-wider mb-3">
-              About TEQVAULT
-            </span>
-            <h1 className="text-3xl md:text-5xl font-black text-slate-900 tracking-tight leading-tight font-outfit">
-              Your Complete Hub for Electronics & Professional IT Solutions
-            </h1>
-            <p className="text-slate-600 text-base md:text-lg leading-relaxed font-medium mt-4">
-              TEQVAULT is a premier Ghanaian electronics retailer and tech service provider located in Kumasi, KNUST. We bridge the gap between quality technology and everyday affordability through curated products, trade-in programs, and flexible payment plans.
-            </p>
-          </motion.div>
-        </section>
-
-        {/* Business Activities Section */}
+        {/* TEQVAULT Ecosystem Section */}
         <section className="space-y-8">
           <div className="text-center max-w-2xl mx-auto space-y-2">
             <h2 className="text-2xl md:text-3xl font-extrabold text-slate-900 uppercase">
-              Our Core Business Activities
+              One Brand. Three Ways to Move Forward.
             </h2>
             <p className="text-slate-500 text-sm md:text-base">
-              Providing end-to-end gadget services for individuals, professionals, and corporate organizations across Ghana.
+              TEQVAULT brings commerce, learning, and professional technology support together in one connected ecosystem.
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {businessActivities.map((act, index) => (
-              <motion.div
-                key={index}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {teqvaultPlatforms.map((platform, index) => (
+              <motion.a
+                key={platform.name}
+                href={platform.href}
+                target="_blank"
+                rel="noreferrer"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.3, delay: index * 0.1 }}
-                className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition-shadow flex flex-col items-start space-y-3"
+                className="group bg-white p-6 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md hover:border-orange-300 transition-all flex flex-col items-start"
               >
                 <div className="p-3 bg-orange-50 text-orange-500 rounded-xl">
-                  <act.icon className="w-6 h-6" />
+                  <platform.icon className="w-6 h-6" />
                 </div>
-                <h3 className="text-lg font-bold text-slate-800">{act.title}</h3>
-                <p className="text-slate-600 text-sm leading-relaxed">{act.description}</p>
-              </motion.div>
+                <div className="flex items-start justify-between gap-3 w-full mt-4">
+                  <h3 className="text-lg font-bold text-slate-800">{platform.name}</h3>
+                  <ArrowUpRight className="w-5 h-5 text-slate-400 group-hover:text-orange-500 shrink-0 transition-colors" />
+                </div>
+                <p className="text-slate-600 text-sm leading-relaxed mt-2 flex-1">{platform.description}</p>
+                <span className="text-orange-600 text-sm font-bold mt-5">{platform.action} →</span>
+              </motion.a>
             ))}
           </div>
         </section>

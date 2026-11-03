@@ -96,13 +96,35 @@ export default function Home() {
 
           {/* Single Row Horizontal Scrollable Category Cards */}
           <div className="flex gap-3  md:justify-center sm:gap-4 overflow-x-auto no-scrollbar py-1 select-none" style={{ WebkitOverflowScrolling: 'touch' }}>
+            <a
+              href="https://www.megagigs.net/buy"
+              target="_blank"
+              rel="noreferrer"
+              className="group flex flex-col gap-2 shrink-0 w-[110px] sm:w-[130px] md:w-[150px] select-none"
+            >
+              <div className="relative h-[80px] sm:h-[95px] md:h-[110px] rounded-xl sm:rounded-2xl overflow-hidden shadow-sm border border-slate-100 bg-slate-100 w-full">
+                <Image
+                  src="/mtn-router.png"
+                  alt="Data Bundle"
+                  fill
+                  sizes="(max-width: 640px) 110px, (max-width: 768px) 130px, 150px"
+                  className="object-cover transition-transform duration-300 group-hover:scale-105"
+                />
+              </div>
+              <span className="text-center text-[12px] font-bold text-slate-700 group-hover:text-orange-500 transition-colors">
+                Data Bundle
+              </span>
+            </a>
             {[
+                 { title: 'Accessories', url: '/access.jpg', query: 'accessories' },
               { title: 'Computers', url: '/L1.jpg', query: 'computers' },
               { title: 'Smartphones', url: '/cat_smartphones.png', query: 'smartphones' },
-              { title: 'Tablets & Ipads', url: '/cat_tablets.png', query: 'tablets-ipads' },
-              { title: 'Accessories', url: '/cat_accessories.png', query: 'accessories' },
+                            { title: 'Network Devices', url: '/starlink.png', query: 'wifi-network-devices' },
+
+
+           
               { title: 'Printers & Scanners', url: '/cat_printers.png', query: 'printers-scanners' },
-              { title: 'Network Devices', url: '/starlink.png', query: 'wifi-network-devices' },
+
             ].map((cat, idx) => (
               <Link
                 key={idx}
@@ -126,48 +148,10 @@ export default function Home() {
                 </span>
               </Link>
             ))}
-            <a
-              href="https://www.megagigs.net/buy"
-              target="_blank"
-              rel="noreferrer"
-              className="group flex flex-col gap-2 shrink-0 w-[110px] sm:w-[130px] md:w-[150px] select-none"
-            >
-              <div className="relative h-[80px] sm:h-[95px] md:h-[110px] rounded-xl sm:rounded-2xl overflow-hidden shadow-sm border border-slate-100 bg-slate-100 w-full">
-                <Image
-                  src="/mtn-router.png"
-                  alt="Data Bundle"
-                  fill
-                  sizes="(max-width: 640px) 110px, (max-width: 768px) 130px, 150px"
-                  className="object-cover transition-transform duration-300 group-hover:scale-105"
-                />
-              </div>
-              <span className="text-center text-xs sm:text-sm font-semibold text-slate-700 group-hover:text-orange-500 transition-colors">
-                Data Bundle
-              </span>
-            </a>
+            
           </div>
 
-            {/* View All Button */}
-            <div className="col-span-full flex justify-center mt-4 md:mt-6">
-              <Link
-                href="/shop"
-                className="
-                group/btn relative inline-flex items-center justify-center gap-3.5 
-                px-8 md:px-10 py-3.5 md:py-4  
-                bg-orange-500 hover:bg-orange-600
-                text-white rounded-full
-                font-black text-sm md:text-base uppercase tracking-wider
-                transition-all duration-300 shadow-lg shadow-orange-500/25
-                hover:shadow-xl hover:shadow-orange-500/35
-                hover:scale-[1.02] active:scale-[0.98]
-                cursor-pointer select-none "
-                
-              >
-                <span className="font-black tracking-widest"> Start Shopping!. </span>
-
-                <ArrowRight className="relative z-10 w-5 h-5 group-hover/btn:translate-x-1 transition-transform duration-300" />
-              </Link>
-            </div>
+         
 
         </section>
 

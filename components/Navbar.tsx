@@ -1,5 +1,5 @@
 'use client';
-import { Menu, ShoppingBag, ShoppingCart, Truck, Headset, Search, Zap, Home, Wallet, MessageCircleMore, Headphones } from 'lucide-react';
+import { Menu, ShoppingBag, ShoppingCart, Info, Headset, Search, Zap, Home, Wallet, MessageCircleMore, Headphones } from 'lucide-react';
 import Link from 'next/link';
 import { useState, useRef, useEffect } from 'react';
 import NotificationsPanel from './Notifications';
@@ -191,10 +191,10 @@ const Navbar = () => {
               </div>
             </ActiveLink>
 
-            <ActiveLink href="/shop?category=new-arrivals">
+            <ActiveLink href="/about">
               <div className="flex items-center gap-1.5 hover:text-orange-500 transition cursor-pointer group">
-                <Truck size={18} className="group-hover:text-orange-500" />
-                <span className="text-sm font-semibold whitespace-nowrap"> New Arrivals</span>
+                <Info size={18} className="group-hover:text-orange-500" />
+                <span className="text-sm font-semibold whitespace-nowrap">About Us</span>
               </div>
             </ActiveLink>
 

@@ -60,15 +60,46 @@ export default function AboutPage() {
       <div className="max-w-6xl mx-auto space-y-20">
         {/* TEQVAULT Ecosystem Section */}
         <section className="space-y-8">
-          <div className="text-center max-w-2xl mx-auto space-y-2">
-            <p className="text-slate-600 text-xs font-bold uppercase tracking-[0.24em]">The ecosystem</p>
-            <h2 className="text-3xl md:text-5xl font-black tracking-tight text-slate-950 font-outfit">
+          <motion.div
+            initial="hidden"
+            animate="visible"
+            variants={{
+              hidden: {},
+              visible: { transition: { staggerChildren: 0.12 } }
+            }}
+            className="text-center max-w-2xl mx-auto space-y-2"
+          >
+            <motion.p
+              variants={{
+                hidden: { opacity: 0, y: 12 },
+                visible: { opacity: 1, y: 0 }
+              }}
+              transition={{ duration: 0.5, ease: 'easeOut' }}
+              className="text-slate-600 text-xs font-bold uppercase tracking-[0.24em]"
+            >
+              The ecosystem
+            </motion.p>
+            <motion.h2
+              variants={{
+                hidden: { opacity: 0, y: 22, scale: 0.98 },
+                visible: { opacity: 1, y: 0, scale: 1 }
+              }}
+              transition={{ duration: 0.7, ease: 'easeOut' }}
+              className="text-3xl md:text-5xl font-black tracking-tight text-slate-950 font-outfit"
+            >
               One Brand. Three Saparate Units.
-            </h2>
-            <p className="text-slate-500 text-sm md:text-base leading-7">
+            </motion.h2>
+            <motion.p
+              variants={{
+                hidden: { opacity: 0, y: 12 },
+                visible: { opacity: 1, y: 0 }
+              }}
+              transition={{ duration: 0.5, ease: 'easeOut' }}
+              className="text-slate-500 text-sm md:text-base leading-7"
+            >
               We bridge commerce, learning, and professional tech solutions together in one connected ecosystem.
-            </p>
-          </div>
+            </motion.p>
+          </motion.div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
             {teqvaultPlatforms.map((platform, index) => (

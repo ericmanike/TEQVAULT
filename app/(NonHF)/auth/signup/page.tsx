@@ -346,9 +346,10 @@ function SignUpForm() {
 export default function SignUpPage() {
   return (
     <Suspense fallback={
-      <div className="w-full rounded-[24px] border border-slate-100 bg-white p-7 shadow-[0_10px_35px_rgba(0,0,0,0.04)] sm:p-9 flex justify-center items-center py-12">
-        <div className="loader w-8 h-8" />
-      </div>
+      <>
+      
+      </>
+      
     }>
       <SignUpForm />
     </Suspense>

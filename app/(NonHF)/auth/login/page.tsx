@@ -11,7 +11,7 @@ import { Mail, Lock, Eye, EyeOff, Check, ArrowRight } from "lucide-react";
 import { Spinner } from "@/components/ui/spinner";
 import { motion } from "framer-motion";
 import { supabase } from "@/lib/supabase";
-import { popup } from "leaflet";
+
 
 const loginSchema = Yup.object().shape({
   email: Yup.string().trim().email("Invalid email address").required("Email is required"),
@@ -277,9 +277,9 @@ function LoginForm() {
 export default function LoginPage() {
   return (
     <Suspense fallback={
-      <div className="w-full rounded-[24px] border border-slate-100 bg-white p-7 shadow-[0_10px_35px_rgba(0,0,0,0.04)] sm:p-9 flex justify-center items-center py-12">
-        <div className="loader w-8 h-8" />
-      </div>
+     <>
+     
+     </>
     }>
       <LoginForm />
     </Suspense>

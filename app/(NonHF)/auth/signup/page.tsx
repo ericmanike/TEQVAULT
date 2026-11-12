@@ -270,23 +270,7 @@ function SignUpForm() {
           )}
         </div>
 
-        {/* Password Requirements Check */}
-        {passwordVal.length > 0 && (
-          <div className="space-y-1 bg-slate-50 p-3 rounded-lg border border-slate-100 text-[14px]">
-            <div className={passwordVal.length >= 8 ? "text-green-600 font-medium" : "text-red-500"}>
-              ✓ At least 8 characters long ({passwordVal.length}/8)
-            </div>
-            <div className={/[a-z]/.test(passwordVal) ? "text-green-600 font-medium" : "text-red-500"}>
-              ✓ At least one lowercase letter
-            </div>
-            <div className={/[A-Z]/.test(passwordVal) ? "text-green-600 font-medium" : "text-red-500"}>
-              ✓ At least one uppercase letter
-            </div>
-            <div className={/[0-9]/.test(passwordVal) ? "text-green-600 font-medium" : "text-red-500"}>
-              ✓ At least one number
-            </div>
-          </div>
-        )}
+
 
         {/* Turnstile CAPTCHA */}
         <div className="flex justify-center my-3">

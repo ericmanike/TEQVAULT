@@ -16,8 +16,8 @@ import { supabase } from "@/lib/supabase";
 import SignupSuccessModal from "@/components/SignupSuccessModal";
 
 const signupSchema = Yup.object().shape({
-  name: Yup.string().trim().required("Full Name is required"),
-  phone: Yup.string().trim().required("Phone Number is required"),
+  name: Yup.string().min(6, "Full Name must be at least 6 characters").trim().required("Full Name is required"),
+  phone: Yup.string().trim().length(10, "Phone Number must be 10 digits").required("Phone Number is required"),
   email: Yup.string().trim().email("Invalid email address").required("Email Address is required"),
   password: Yup.string()
     .min(8, "Password must be at least 8 characters")

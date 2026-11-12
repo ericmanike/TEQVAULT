@@ -1,7 +1,8 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { Turnstile, type TurnstileInstance } from '@marsidev/react-turnstile';
 import { Check, Mail, ExternalLink, ArrowRight, ShieldCheck, ShoppingBag, X, Send } from 'lucide-react';
 import { Spinner } from "@/components/ui/spinner";
 import { supabase } from '@/lib/supabase';
@@ -69,6 +70,18 @@ export default function SignupSuccessModal({ isOpen, onClose, type, email, redir
   const [resendCooldown, setResendCooldown] = useState(0);
   const [isResending, setIsResending] = useState(false);
   const [resendStatus, setResendStatus] = useState<'idle' | 'success' | 'error'>('idle');
+  const [resendError, setResendError] = useState<string | null>(null);
+  const [captchaToken, setCaptchaToken] = useState<string | undefined>();
+  const turnstileRef = useRef<TurnstileInstance | undefined>(undefined);
+
+  // Reset state when modal closes
+  useEffect(() => {
+    if (!isOpen) {
+      setCaptchaToken(undefined);
+      setResendStatus('idle');
+      setResendError(null);
+    }
+  }, [isOpen]);
 
   // Cooldown countdown timer for resending verification email
   useEffect(() => {
@@ -93,8 +106,16 @@ export default function SignupSuccessModal({ isOpen, onClose, type, email, redir
 
   const handleResendEmail = async () => {
     if (resendCooldown > 0 || isResending) return;
+
+    if (!captchaToken) {
+      setResendStatus('error');
+      setResendError('Please complete the security check (CAPTCHA).');
+      return;
+    }
+
     setIsResending(true);
     setResendStatus('idle');
+    setResendError(null);
 
     try {
       const { error } = await supabase.auth.resend({
@@ -102,6 +123,7 @@ export default function SignupSuccessModal({ isOpen, onClose, type, email, redir
         email: email,
         options: {
           emailRedirectTo: `${window.location.origin}${redirectTo}`,
+          captchaToken,
         },
       });
 
@@ -111,8 +133,11 @@ export default function SignupSuccessModal({ isOpen, onClose, type, email, redir
     } catch (err: any) {
       console.error('Error resending email:', err);
       setResendStatus('error');
+      setResendError(err?.message || 'Failed to resend. Please try again.');
     } finally {
       setIsResending(false);
+      setCaptchaToken(undefined);
+      turnstileRef.current?.reset();
     }
   };
 
@@ -198,6 +223,27 @@ export default function SignupSuccessModal({ isOpen, onClose, type, email, redir
                   </div>
                 </div>
 
+                {/* Turnstile CAPTCHA */}
+                <div className="flex justify-center">
+                  <Turnstile
+                    ref={turnstileRef}
+                    siteKey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY || "0x4AAAAAAEolcdFOtWjBK2n_"}
+                    onSuccess={(token) => {
+                      setCaptchaToken(token);
+                      if (resendStatus === 'error') {
+                        setResendStatus('idle');
+                        setResendError(null);
+                      }
+                    }}
+                    onExpire={() => {
+                      setCaptchaToken(undefined);
+                    }}
+                    onError={() => {
+                      setCaptchaToken(undefined);
+                    }}
+                  />
+                </div>
+
                 {/* Action Buttons */}
                 <div className="space-y-3 pt-2">
                   {/* Primary: Open Webmail */}
@@ -252,7 +298,7 @@ export default function SignupSuccessModal({ isOpen, onClose, type, email, redir
                       exit={{ opacity: 0 }}
                       className="text-xs font-bold text-red-500"
                     >
-                      Failed to resend. Please try again.
+                      {resendError || 'Failed to resend. Please try again.'}
                     </motion.p>
                   )}
                 </AnimatePresence>

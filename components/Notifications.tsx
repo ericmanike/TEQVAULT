@@ -1,11 +1,25 @@
 'use client';
 import React, { useEffect, useRef, useState } from 'react';
+import Link from 'next/link';
 import { X, Send, Headset, RefreshCw } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { supabase } from '@/lib/supabase';
+import { formatCurrency } from '@/lib/utils';
 
 interface NotificationsPanelProps {
   isOpen: boolean;
   setIsOpen: (isOpen: boolean) => void;
+}
+
+interface ChatProductCard {
+  id: string;
+  name: string;
+  brand: string;
+  price: number;
+  discount?: number;
+  slug: string;
+  image: string;
+  stock: number;
 }
 
 interface Message {
@@ -14,6 +28,7 @@ interface Message {
   text: string;
   time: string;
   actionLink?: { label: string; href: string };
+  products?: ChatProductCard[];
 }
 
 const INITIAL_MESSAGES: Message[] = [
@@ -38,6 +53,7 @@ const NotificationsPanel: React.FC<NotificationsPanelProps> = ({ isOpen, setIsOp
   const [isTyping, setIsTyping] = useState(false);
   const chatEndRef = useRef<HTMLDivElement>(null);
   const panelRef = useRef<HTMLDivElement>(null);
+  const handleSendRef = useRef<(textToSend?: string) => Promise<void>>(async () => {});
 
   const scrollToBottom = () => {
     chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -72,17 +88,17 @@ const NotificationsPanel: React.FC<NotificationsPanelProps> = ({ isOpen, setIsOp
       const customEvent = e as CustomEvent;
       if (customEvent.detail && typeof customEvent.detail === 'string') {
         setTimeout(() => {
-          handleSend(customEvent.detail);
+          handleSendRef.current(customEvent.detail);
         }, 300);
       }
     };
     window.addEventListener('open-ai-chat', handleOpenAiChat);
     return () => window.removeEventListener('open-ai-chat', handleOpenAiChat);
-  }, []);
+  }, [setIsOpen]);
 
-  const handleSend = (textToSend?: string) => {
+  const handleSend = async (textToSend?: string) => {
     const query = (textToSend || input).trim();
-    if (!query) return;
+    if (!query || isTyping) return;
 
     const userMsg: Message = {
       id: Date.now().toString(),
@@ -91,47 +107,64 @@ const NotificationsPanel: React.FC<NotificationsPanelProps> = ({ isOpen, setIsOp
       time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
     };
 
-    setMessages((prev) => [...prev, userMsg]);
+    const nextMessages = [...messages, userMsg];
+    setMessages(nextMessages);
     if (!textToSend) setInput('');
     setIsTyping(true);
 
-    setTimeout(() => {
-      let aiResponseText = "Thank you for reaching out! Our team is available 24/7. You can also contact us directly at 054 344 2518 or support@teqvault.app.";
-      let actionLink: Message['actionLink'] | undefined = undefined;
+    try {
+      const { data: { session } } = await supabase.auth.getSession();
+      const headers: Record<string, string> = {
+        'Content-Type': 'application/json',
+      };
+      if (session?.access_token) {
+        headers['Authorization'] = `Bearer ${session.access_token}`;
+      }
 
-      const lower = query.toLowerCase();
-      if (lower.includes('falaa') || lower.includes('deal') || lower.includes('discount') || lower.includes('sale')) {
-        aiResponseText = "🔥 Check out our Falaa Deals! We have products discounted up to 30% off across laptops, smartphones, and accessories.";
-        actionLink = { label: 'View Falaa Deals', href: '/shop?deals=true' };
-      } else if (lower.includes('pay small') || lower.includes('installment') || lower.includes('layaway') || lower.includes('finance')) {
-        aiResponseText = "💳 With Pay Small Small, you can reserve any gadget with a flexible down payment and pay the balance in easy installments!";
-        actionLink = { label: 'Explore Pay Small Small', href: '/customer/pay-small-small' };
-      } else if (lower.includes('order') || lower.includes('track') || lower.includes('status') || lower.includes('shipping')) {
-        aiResponseText = "📦 You can view and track your orders live in your Customer Dashboard under Orders.";
-        actionLink = { label: 'My Orders', href: '/customer/orders' };
-      } else if (lower.includes('location') || lower.includes('store') || lower.includes('where') || lower.includes('kumasi') || lower.includes('knust')) {
-        aiResponseText = "🏪 Our store is located in Ghana. We are open Monday – Saturday from 8:00 AM to 8:00 PM.";
-        actionLink = { label: 'Contact Us', href: '/contact' };
-      } else if (lower.includes('contact') || lower.includes('call') || lower.includes('phone') || lower.includes('whatsapp')) {
-        aiResponseText = "📞 You can call or WhatsApp us directly at 054 344 2518 or email support@teqvault.app.";
-        actionLink = { label: 'Contact Page', href: '/contact' };
-      } else if (lower.includes('phone') || lower.includes('laptop') || lower.includes('buy') || lower.includes('gadget')) {
-        aiResponseText = "⚡ Explore our vast catalog of verified laptops, smartphones, audio, and accessories!";
-        actionLink = { label: 'Browse Products', href: '/shop' };
+      const apiMessages = nextMessages
+        .filter((m) => m.id !== '1')
+        .map((m) => ({
+          role: m.sender === 'user' ? 'user' : 'assistant',
+          content: m.text,
+        }));
+
+      const res = await fetch('/api/chat', {
+        method: 'POST',
+        headers,
+        body: JSON.stringify({ messages: apiMessages }),
+      });
+
+      const data = await res.json();
+      if (!res.ok) {
+        throw new Error(data?.error || 'Failed to get response');
       }
 
       const aiMsg: Message = {
         id: (Date.now() + 1).toString(),
         sender: 'ai',
-        text: aiResponseText,
+        text: data.reply || 'I could not process that request right now.',
         time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-        actionLink,
+        actionLink: data.actionLink,
+        products: data.products,
       };
 
       setMessages((prev) => [...prev, aiMsg]);
+    } catch (err) {
+      console.error('Chat request failed:', err);
+      const errorMsg: Message = {
+        id: (Date.now() + 1).toString(),
+        sender: 'ai',
+        text: 'Sorry, I ran into a temporary issue connecting to our assistant. You can still reach our team directly at 054 344 2518 or support@teqvault.app.',
+        time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+        actionLink: { label: 'Contact Support', href: '/contact' },
+      };
+      setMessages((prev) => [...prev, errorMsg]);
+    } finally {
       setIsTyping(false);
-    }, 800);
+    }
   };
+
+  handleSendRef.current = handleSend;
 
   const handleReset = () => {
     setMessages(INITIAL_MESSAGES);
@@ -199,15 +232,48 @@ const NotificationsPanel: React.FC<NotificationsPanelProps> = ({ isOpen, setIsOp
                     : 'bg-white text-slate-800 border border-slate-200/80 rounded-bl-none shadow-xs'
                   }`}
               >
-                <p>{msg.text}</p>
+                <p className="whitespace-pre-line">{msg.text}</p>
+
+                {msg.products && msg.products.length > 0 && (
+                  <div className="mt-2.5 space-y-2">
+                    {msg.products.map((product) => (
+                      <Link
+                        key={product.id}
+                        href={`/products/${product.slug}`}
+                        onClick={() => setIsOpen(false)}
+                        className="flex items-center gap-2.5 p-2 rounded-xl bg-slate-50 hover:bg-purple-50/60 border border-slate-200/80 transition-colors"
+                      >
+                        <img
+                          src={product.image}
+                          alt={product.name}
+                          className="w-11 h-11 rounded-lg object-cover bg-white shrink-0 border border-slate-100"
+                        />
+                        <div className="min-w-0 flex-1">
+                          <p className="text-xs font-bold text-slate-900 truncate">{product.name}</p>
+                          <div className="flex items-center gap-1.5 mt-0.5">
+                            <span className="text-xs font-extrabold text-[#632CF5]">
+                              {formatCurrency(product.price)}
+                            </span>
+                            {product.discount && product.discount > 0 ? (
+                              <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-orange-100 text-orange-600">
+                                -{product.discount}%
+                              </span>
+                            ) : null}
+                          </div>
+                        </div>
+                      </Link>
+                    ))}
+                  </div>
+                )}
+
                 {msg.actionLink && (
-                  <a
+                  <Link
                     href={msg.actionLink.href}
                     onClick={() => setIsOpen(false)}
                     className="inline-flex items-center gap-1.5 mt-2.5 px-3 py-1.5 bg-[#632CF5] hover:bg-[#5223cb] text-white rounded-lg text-sm font-bold transition-all shadow-xs"
                   >
                     <span>{msg.actionLink.label}</span>
-                  </a>
+                  </Link>
                 )}
               </div>
             </div>
@@ -229,8 +295,9 @@ const NotificationsPanel: React.FC<NotificationsPanelProps> = ({ isOpen, setIsOp
         {SUGGESTIONS.map((s, idx) => (
           <button
             key={idx}
+            disabled={isTyping}
             onClick={() => handleSend(s.prompt)}
-            className="whitespace-nowrap px-3 py-1.5 rounded-full bg-slate-100 hover:bg-purple-50 hover:text-[#632CF5] text-slate-700 text-sm font-semibold transition-all border border-slate-200/60 cursor-pointer shrink-0"
+            className="whitespace-nowrap px-3 py-1.5 rounded-full bg-slate-100 hover:bg-purple-50 hover:text-[#632CF5] text-slate-700 text-sm font-semibold transition-all border border-slate-200/60 cursor-pointer shrink-0 disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {s.label}
           </button>
@@ -265,7 +332,7 @@ const NotificationsPanel: React.FC<NotificationsPanelProps> = ({ isOpen, setIsOp
           />
           <button
             type="submit"
-            disabled={!input.trim()}
+            disabled={!input.trim() || isTyping}
             className="w-8 h-8 rounded-lg bg-[#632CF5] hover:bg-[#5223cb] disabled:bg-slate-200 text-white flex items-center justify-center transition-all cursor-pointer disabled:cursor-not-allowed shrink-0"
           >
             <Send size={15} />

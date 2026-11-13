@@ -1,7 +1,7 @@
 'use client';
 import React, { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
-import { X, Send, Headset, RefreshCw } from 'lucide-react';
+import { X, Send, MessageSquareText, RefreshCw } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { supabase } from '@/lib/supabase';
 import { formatCurrency } from '@/lib/utils';
@@ -180,7 +180,7 @@ const NotificationsPanel: React.FC<NotificationsPanelProps> = ({ isOpen, setIsOp
       <div className="flex items-center justify-between px-5 py-4 bg-slate-900 text-white shrink-0 shadow-sm">
         <div className="flex items-center gap-3">
           <div className="w-9 h-9 rounded-xl bg-[#632CF5] flex items-center justify-center text-white shadow-md shadow-[#632CF5]/30">
-            <Headset size={20} />
+            <MessageSquareText size={20} />
           </div>
           <div>
             <div className="flex items-center gap-2">
@@ -223,7 +223,7 @@ const NotificationsPanel: React.FC<NotificationsPanelProps> = ({ isOpen, setIsOp
             <div className={`flex items-start gap-2 max-w-[85%] ${msg.sender === 'user' ? 'flex-row-reverse' : ''}`}>
               {msg.sender === 'ai' && (
                 <div className="w-7 h-7 rounded-lg bg-[#632CF5] text-white flex items-center justify-center shrink-0 mt-1 shadow-sm text-xs">
-                  <Headset size={14} />
+                  <MessageSquareText size={14} />
                 </div>
               )}
               <div
@@ -283,8 +283,8 @@ const NotificationsPanel: React.FC<NotificationsPanelProps> = ({ isOpen, setIsOp
 
         {isTyping && (
           <div className="flex items-center gap-2 text-slate-400 text-sm py-1 animate-pulse">
-            <Headset size={14} className="text-[#632CF5]" />
-            <span>AI is typing response...</span>
+
+            <span> typing...</span>
           </div>
         )}
         <div ref={chatEndRef} />

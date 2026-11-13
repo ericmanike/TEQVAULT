@@ -112,7 +112,7 @@ export default function Home() {
                 />
               </div>
               <span className="text-center text-[12px] font-bold text-slate-700 group-hover:text-orange-500 transition-colors">
-                Data Bundle
+                DATA BUNDLES
               </span>
             </a>
             {[

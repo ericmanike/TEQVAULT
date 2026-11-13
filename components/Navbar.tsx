@@ -1,5 +1,6 @@
 'use client';
-import { Menu, ShoppingBag, ShoppingCart, Info, Headset, Search, Zap, Home, Wallet, MessageCircleMore, Headphones } from 'lucide-react';
+import { Menu, ShoppingBag,MessageSquareText, ShoppingCart, Info,  Search, Zap, Home, Wallet, MessageCircleMore, Headphones } from 'lucide-react';
+
 import Link from 'next/link';
 import { useState, useRef, useEffect } from 'react';
 import NotificationsPanel from './Notifications';
@@ -151,7 +152,7 @@ const Navbar = () => {
               className="p-2 hover:bg-gray-100 rounded-lg transition text-slate-800 flex items-center justify-center cursor-pointer"
               title="Inbox Messages"
             >
-              <MessageCircleMore size={23} className="md:size-[26px]" strokeWidth={2} />
+        <MessageSquareText   size={23} className="md:size-[26px]" strokeWidth={2} />
             </Link>
 
             <Link href="/cart" className="relative p-2 hover:bg-gray-100 rounded-lg transition flex items-center justify-center">
@@ -221,7 +222,7 @@ const Navbar = () => {
         onClick={() => setIsNotificationsOpen(true)}
         aria-label="AI Support & Notifications"
       >
-        <Headset size={30} className="text-white" strokeWidth={2.4} />
+        <MessageSquareText size={30} className="text-white" strokeWidth={2.4} />
         <span className="absolute top-0 right-0 mt-0.5 mr-0.5 w-4 h-4 bg-red-500 border-2 border-white rounded-full animate-pulse"></span>
       </button>
 

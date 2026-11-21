@@ -1,9 +1,9 @@
 'use client';
 import { ProductCard } from '@/components/ProductCard';
 import AutoScrollProductRow from '@/components/AutoScrollProductRow';
-import ProductScrollRow from '@/components/ProductScrollRow';
+
 import Link from "next/link";
-import HeroSlider from '@/components/HeroSlider';
+
 
 import Image from 'next/image';
 

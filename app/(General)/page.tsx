@@ -1,5 +1,5 @@
 'use client';
-import { ProductCard } from '@/components/ProductCard';
+
 import AutoScrollProductRow from '@/components/AutoScrollProductRow';
 
 import Link from "next/link";
@@ -9,7 +9,7 @@ import Image from 'next/image';
 
 import { fetchAllProducts, Product } from '@/lib/products';
 import { useEffect, useState } from 'react';
-import { MonitorCog, Cable, ArrowRight, PackageX, Search } from 'lucide-react';
+import {  Search } from 'lucide-react';
 import SkeletonCards from '@/components/SkeletonCards';
 import { CategoryRowsSection } from '@/components/CategoryRowsSection';
 

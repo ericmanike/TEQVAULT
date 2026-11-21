@@ -1,5 +1,5 @@
 'use client';
-import { Menu, ShoppingBag,MessageSquareText, ShoppingCart, Info,  Search, Zap, Home, Wallet, MessageCircleMore, Headphones } from 'lucide-react';
+import { Menu, ShoppingBag, MessageSquareText, MessageCircleMore, ShoppingCart, Info,  Search, Zap, Home, Wallet, Headphones } from 'lucide-react';
 
 import Link from 'next/link';
 import { useState, useRef, useEffect } from 'react';
@@ -152,13 +152,13 @@ const Navbar = () => {
               className="p-2 hover:bg-gray-100 rounded-lg transition text-slate-800 flex items-center justify-center cursor-pointer"
               title="Inbox Messages"
             >
-        <MessageSquareText   size={23} className="md:size-[26px]" strokeWidth={2} />
+        < MessageCircleMore size={22} className="md:size-[22px]" strokeWidth={2} />
             </Link>
 
             <Link href="/cart" className="relative p-2 hover:bg-gray-100 rounded-lg transition flex items-center justify-center">
-              <ShoppingCart size={22} className="text-black md:size-[26px]" strokeWidth={2} />
+              <ShoppingCart size={26} className="text-black md:size-[28px]" strokeWidth={2} />
               {totalItems > 0 && (
-                <span className="absolute top-0 right-0 w-3.5 h-3.5 md:w-4 md:h-4 bg-orange-500 text-white text-[8px] md:text-[9px] font-bold rounded-full flex items-center justify-center">
+                <span className="absolute top-0 right-0 w-4 h-4 md:w-5 md:h-5 bg-orange-500 text-white text-[9px] md:text-[12px] font-bold rounded-full flex items-center justify-center">
                   {totalItems}
                 </span>
               )}

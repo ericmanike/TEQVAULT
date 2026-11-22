@@ -2,9 +2,8 @@
 
 import AutoScrollProductRow from '@/components/AutoScrollProductRow';
 
+
 import Link from "next/link";
-
-
 import Image from 'next/image';
 
 import { fetchAllProducts, Product } from '@/lib/products';
@@ -12,50 +11,6 @@ import { useEffect, useState } from 'react';
 import {  Search } from 'lucide-react';
 import SkeletonCards from '@/components/SkeletonCards';
 import { CategoryRowsSection } from '@/components/CategoryRowsSection';
-
-const COMPUTER_SLIDES = [
-  {
-    id: 0,
-    title: 'TEQVAULT Official Grand Launch!',
-    description: 'Watch the official launch commercial. Celebrate with 10% off storewide using code LAUNCH10.',
-    ctaText: 'Watch Launch Video',
-    ctaLink: '/launch',
-    backgroundImage: '/launch_ad_hero.jpg',
-  },
-  {
-    id: 4,
-    title: 'Partner With Us',
-    description: 'Grow your business on TEQVAULT. Reach thousands of buyers with 0% commission options.',
-    ctaText: 'Contact Us',
-    ctaLink: '/contact',
-    backgroundImage: '/Seller.jpg',
-  },
-  {
-    id: 1,
-    title: 'High-Performance Workstations',
-    description: 'Powerful setups for creators, developers,gamers and power users.',
-    ctaText: 'Shop Workstations',
-    ctaLink: '/shop?category=computers',
-    backgroundImage: '/officeSet.jpg',
-  },
-  {
-    id: 2,
-    title: 'iPhone & Latest Smartphones',
-    description: 'Discover the newest flagship iPhones and smartphones with cutting-edge mobile tech.',
-    ctaText: 'Explore Smartphones',
-    ctaLink: '/shop?category=smartphones',
-    backgroundImage: '/cat_smartphones.png',
-  },
-  {
-    id: 3,
-    title: 'IT & Networking Devices',
-    description: 'Reliable networking hardware and server infrastructure for your business.',
-    ctaText: 'Discover More',
-    ctaLink: '/shop?category=wifi-network-devices',
-    backgroundImage: '/router.jpg',
-  },
- 
-];
 
 
 
@@ -77,10 +32,11 @@ export default function Home() {
   // const RECOMMENDED_GADGETS = ALL_PRODUCTS.length > 10 ? ALL_PRODUCTS.slice(10, 16) : ALL_PRODUCTS.slice(0, 6);
 
   return (
-    <main className="w-full bg-slate-50 min-h-screen   overflow-x-hidden">
+    <main className="w-full bg-slate-50 min-h-screen overflow-x-hidden">
+      {/* Hero Section */}
+      
 
-  
-      <div className="relative  z-10 px-4 md:px-10 space-y-10">
+      <div className="relative z-10 px-4 md:px-10 space-y-10 pt-4 sm:pt-6">
         
         {/* Shop by Category - Carousel */}
         <section className="w-full py-3 md:p-6 rounded-[15px] md:rounded-[15px] bg-transparent shadow-lg shadow-slate-100/50 border border-slate-50 flex flex-col gap-4">

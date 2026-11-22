@@ -11,6 +11,7 @@ import { useEffect, useState } from 'react';
 import {  Search } from 'lucide-react';
 import SkeletonCards from '@/components/SkeletonCards';
 import { CategoryRowsSection } from '@/components/CategoryRowsSection';
+import RotatingText from '@/components/RotatingText';
 
 
 
@@ -34,7 +35,50 @@ export default function Home() {
   return (
     <main className="w-full bg-slate-50 min-h-screen overflow-x-hidden">
       {/* Hero Section */}
-      
+      <section className="relative isolate flex min-h-[340px] items-center justify-center overflow-hidden sm:min-h-[400px] lg:min-h-[480px]">
+        <Image
+          src="/hero-family.png"
+          alt="Happy family enjoying technology together at home"
+          fill
+          priority
+          sizes="100vw"
+          className="object-cover object-center"
+        />
+        <div className="absolute inset-0 bg-slate-950/55" />
+        <div className="absolute inset-0 bg-gradient-to-b from-slate-950/20 via-transparent to-slate-950/70" />
+
+        <div className="relative z-10 mx-auto flex w-full max-w-5xl flex-col items-center px-5 text-center text-white">
+          <p className="mb-4 text-xs font-bold uppercase tracking-[0.35em] text-orange-300 sm:text-sm">
+           Shop smart. Live better. Everything Tech 
+          </p>
+          <h1 className="flex flex-col items-center text-4xl font-black leading-[1.08] tracking-tight sm:text-6xl lg:text-7xl">
+            <span>Explore</span>
+            <RotatingText
+              texts={[
+                'your next upgrade',
+                'premium smart devices',
+                'reliable computers  ',
+                "latest smartphones"              ]}
+              mainClassName="mt-2 justify-center text-orange-400"
+              splitBy="characters"
+              staggerFrom="first"
+              staggerDuration={0.045}
+              rotationInterval={2800}
+              transition={{ type: 'spring', damping: 24, stiffness: 260 }}
+              initial={{ y: '100%', opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              exit={{ x: '120%', opacity: 0 }}
+            />
+          </h1>
+
+          <Link
+            href="/shop"
+            className="mt-8 rounded-full bg-orange-500 px-8 py-3.5 text-sm font-black uppercase tracking-[0.16em] text-white shadow-[0_12px_35px_rgba(249,115,22,0.35)] transition-all duration-300 hover:-translate-y-1 hover:bg-orange-400 hover:shadow-[0_16px_40px_rgba(249,115,22,0.45)] sm:px-10 sm:py-4 sm:text-base"
+          >
+            Shop Now
+          </Link>
+        </div>
+      </section>
 
       <div className="relative z-10 px-4 md:px-10 space-y-10 pt-4 sm:pt-6">
         

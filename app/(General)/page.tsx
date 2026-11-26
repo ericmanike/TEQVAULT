@@ -48,14 +48,14 @@ export default function Home() {
         <div className="absolute inset-0 bg-gradient-to-b from-slate-950/20 via-transparent to-slate-950/70" />
 
         <div className="relative z-10 mx-auto flex w-full max-w-5xl flex-col items-center px-5 text-center text-white">
-          <p className="mb-6 text-xl md:text-[18px] font-bold uppercase tracking-[0.35em] text-orange-300 ">
+          <p className="mb-8 md:mb-10 text-xl md:text-[18px] font-bold uppercase tracking-[0.35em] text-orange-300 ">
            Shop smart. Live better. Everything Tech 
           </p>
           <h1 className="flex flex-col items-center text-4xl font-black leading-[1.08] tracking-tight sm:text-6xl lg:text-7xl">
             <span>Explore</span>
             <RotatingText
               texts={[
-                'your next upgrade',
+                
                 'premium smart devices',
                 'reliable computers  ',
                 "latest smartphones"              ]}
@@ -73,7 +73,7 @@ export default function Home() {
 
           <Link
             href="/shop"
-            className=" mt-10 rounded-full bg-orange-500 px-8 py-3.5 text-sm font-black uppercase tracking-[0.16em] text-white shadow-[0_12px_35px_rgba(249,115,22,0.35)] transition-all duration-300 hover:-translate-y-1 hover:bg-orange-400 hover:shadow-[0_16px_40px_rgba(249,115,22,0.45)] sm:px-10 sm:py-4 sm:text-base"
+            className="mt-10 md:mt-10 rounded-full bg-orange-500 px-8 py-3.5 text-sm font-black uppercase tracking-[0.16em] text-white shadow-[0_12px_35px_rgba(249,115,22,0.35)] transition-all duration-300 hover:-translate-y-1 hover:bg-orange-400 hover:shadow-[0_16px_40px_rgba(249,115,22,0.45)] sm:px-10 sm:py-4 sm:text-base"
           >
             Shop Now
           </Link>

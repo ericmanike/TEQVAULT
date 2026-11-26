@@ -218,7 +218,7 @@ const Navbar = () => {
 
       {/* Floating AI Chatbot / Notification Button */}
       <button
-        className="fixed bottom-6 right-6 z-50 p-4 bg-slate-700 hover:bg-slate-600 text-white rounded-full shadow-xl hover:shadow-2xl hover:scale-110 transition-all active:scale-95 cursor-pointer flex items-center justify-center border-2 border-white shadow-[green]/40"
+        className="fixed bottom-6 right-6 z-50 p-4 bg-[black] hover:bg-[black]/8 text-white rounded-full shadow-xl hover:shadow-2xl hover:scale-110 transition-all active:scale-95 cursor-pointer flex items-center justify-center border-2 border-white shadow-[green]/40"
         onClick={() => setIsNotificationsOpen(true)}
         aria-label="AI Support & Notifications"
       >

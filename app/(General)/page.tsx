@@ -96,7 +96,7 @@ export default function Home() {
 
           {/* Single Row Horizontal Scrollable Category Cards */}
           <div className="flex gap-3  md:justify-center sm:gap-4 overflow-x-auto no-scrollbar py-1 select-none" style={{ WebkitOverflowScrolling: 'touch' }}>
-            <a
+            {/* <a
               href="https://www.megagigs.net/buy"
               target="_blank"
               rel="noreferrer"
@@ -114,7 +114,7 @@ export default function Home() {
               <span className="text-center text-[12px] font-bold text-slate-700 group-hover:text-orange-500 transition-colors">
                 DATA BUNDLES
               </span>
-            </a>
+            </a> */}
             {[
                  { title: 'Accessories', url: '/access.jpg', query: 'accessories' },
               { title: 'Computers', url: '/L1.jpg', query: 'computers' },
